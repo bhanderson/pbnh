@@ -35,11 +35,38 @@ class Paster():
         except IntegrityError:
             paste.id = 'HASH COLLISION'
             self.session.rollback()
-        return {'id': paste.id, 'hash': sha1}
+        return {'id': paste.id, 'hashid': sha1}
+
+    def query(self, id=None, hashid=None):
+        result = None
+        if id:
+            result = (self.session.query(models.Paste)
+                      .filter(models.Paste.id == id).first())
+        elif hashid:
+            result = (self.session.query(models.Paste)
+                      .filter(models.Paste.hashid == hashid).first())
+        else:
+            return None
+
+        result = {
+                'id': result.id,
+                'hashid': result.hashid,
+                'ip': result.ip,
+                'mac': result.mac,
+                'mime': result.mime,
+                'timestamp': result.timestamp,
+                'sunset': result.sunset,
+                'data': result.data
+                }
+
+        return result
 
 def main():
     with Paster() as paste:
-        return paste.create(b'This is a test paste')
+        created = paste.create(b'This is a test paste')
+        print(created)
+        lookup = paste.query(hashid=created['hashid'])
+        return lookup
 
 if __name__ == "__main__":
     print(main())

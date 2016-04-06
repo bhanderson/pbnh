@@ -1,5 +1,6 @@
-from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
+from sqlalchemy import Column, DateTime, Integer, LargeBinary, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import func
 
 Base = declarative_base()
 
@@ -23,7 +24,9 @@ class Paste(Base):
     hashid = Column(String, nullable=False)
     ip = Column(String)
     mac = Column(String)
-    timestamp = Column(DateTime, nullable=False)
+    timestamp = Column(DateTime, default=func.now())
     mime = Column(String, default='text/plain')
     sunset = Column(DateTime)
     data = Column(LargeBinary)
+
+    __table_args__ = (UniqueConstraint('hashid', name='unique_hash'),)

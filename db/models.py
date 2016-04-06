@@ -1,11 +1,11 @@
-from sqlalchemy import Blob, Column, DateTime, Integer, String
+from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declaratice_base()
+Base = declarative_base()
 
 class Paste(Base):
     """Class to define the paste table
-    
+
     paste
     -------------
     id           (PK) int
@@ -15,7 +15,7 @@ class Paste(Base):
     mime         string
     timestamp    datetime
     sunset       datetime
-    data         blob    
+    data         blob
     """
     __tablename__ = 'paste'
 
@@ -23,7 +23,7 @@ class Paste(Base):
     hashid = Column(String, nullable=False)
     ip = Column(String)
     mac = Column(String)
-    timestamp = Colum(DateTime, nullable=False)
+    timestamp = Column(DateTime, nullable=False)
     mime = Column(String, default='text/plain')
     sunset = Column(DateTime)
-    data = Column(Blob)
+    data = Column(LargeBinary)

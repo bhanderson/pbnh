@@ -3,12 +3,14 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def hello():
-    print(request.data)
-    print(request.form)
-    print(request.stream)
     print(request.files)
-    print(request.method)
-    print(request.values)
+    print(request.headers)
+    print(request.url)
+    print(request.url_root)
+    fs = request.files.get('c')
+    if fs:
+        print(fs.read())
+        print(fs.stream)
     return "Hello World!"
 
 if __name__ == "__main__":

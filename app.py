@@ -13,12 +13,15 @@ app = Flask(__name__)
 def filedata(fs):
     try:
         buf = fs.stream
+        print(type(buf))
         if buf and isinstance(buf, io.BytesIO):
             data = buf.read()
             open('outfile', 'wb').write(data)
             mime = magic.from_buffer(data, mime=True)
             open('mime', 'wb').write(mime)
             return hashlib.sha1(data).hexdigest(), mime
+        if buf and isinstance(buf, io.BufferedRandom):
+            return 'working'
     except IOError as e:
         return 'caught exception in filedata' + str(e)
     return 'File save error, your file is probably too big'
@@ -60,23 +63,6 @@ def hello():
 
 """
     if request.method == 'POST':
-        fs = request.files.get('c', 'content')
-        if fs and not type(fs) is str:
-            # save the paste
-            bytestream = fs.stream.getbuffer().tobytes()
-            open('filename', 'wb').write(bytestream)
-            # save the mimetype
-            mime = magic.from_buffer(bytestream, mime=True)
-            open('mime', 'wb').write(mime)
-            print(mime)
-            return hashlib.sha1(bytestream).hexdigest() + '\n'
-        else:
-            url = request.form.get('c', 'content')
-            o = urlparse(url)
-            print(o.geturl())
-            pass
-            return redirect(o.geturl(), code=302)
-        return 'error'
     else:
         filename = 'filename'
         # open the file

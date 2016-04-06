@@ -63,3 +63,9 @@ target/
 
 # Virtualenv
 venv/
+
+# vim swap files
+*.swp
+
+#db files
+*.db

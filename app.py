@@ -1,23 +1,31 @@
 from flask import Flask, request, Response, send_file
+import magic
 import io
+import hashlib
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def hello():
     if request.method == 'POST':
-        print(request.files)
-        print(request.headers)
-        print(request.url)
-        print(request.url_root)
         fs = request.files.get('c', 'content')
         if fs:
-            #print(fs.stream)
-            open('filename', 'wb').write(fs.stream.getbuffer())
-        return "Hello World!"
+            # save the paste
+            bytestream = fs.stream.getbuffer().tobytes()
+            open('filename', 'wb').write(bytestream)
+            # save the mimetype
+            mime = magic.from_buffer(bytestream, mime=True)
+            open('mime', 'wb').write(mime)
+            return hashlib.sha1(bytestream).hexdigest() + '\n'
+        return 'error'
     else:
         filename = 'filename'
-        return send_file(io.BytesIO(io.open(filename, 'rb').read()),
-                attachment_filename=filename,mimetype='image/png')
+        # open the file
+        f = open(filename, 'rb').read()
+        # read the mimetype of the file we saved
+        mime = open('mime', 'r').read()
+        # get the bytestream of the file
+        binstream = io.BytesIO(f)
+        return send_file(binstream, attachment_filename=filename, mimetype=mime)
 
 if __name__ == "__main__":
     app.run('0.0.0.0', debug=True)

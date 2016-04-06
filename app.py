@@ -7,7 +7,7 @@ def hello():
     print(request.headers)
     print(request.url)
     print(request.url_root)
-    fs = request.files.get('c')
+    fs = request.files.get('c', 'content')
     if fs:
         print(fs.read())
         print(fs.stream)

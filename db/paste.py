@@ -47,17 +47,17 @@ class Paster():
                       .filter(models.Paste.hashid == hashid).first())
         else:
             return None
-
-        result = {
-                'id': result.id,
-                'hashid': result.hashid,
-                'ip': result.ip,
-                'mac': result.mac,
-                'mime': result.mime,
-                'timestamp': result.timestamp,
-                'sunset': result.sunset,
-                'data': result.data
-                }
+        if result:
+            result = {
+                    'id': result.id,
+                    'hashid': result.hashid,
+                    'ip': result.ip,
+                    'mac': result.mac,
+                    'mime': result.mime,
+                    'timestamp': result.timestamp,
+                    'sunset': result.sunset,
+                    'data': result.data
+                    }
 
         return result
 

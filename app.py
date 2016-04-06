@@ -65,10 +65,13 @@ def hello():
     print('fell through')
     return 'fell through'
 
-@app.route("/a")
-def getthisshit():
+@app.route("/<int:paste_id>")
+def getthisshit(paste_id):
     with paste.Paster() as p:
-        return p.query(id=1).get('data')
+        query = p.query(id=paste_id)
+        if query:
+            return query.get('data')
+        return 'Error: paste not found'
 
 """
     if request.method == 'POST':

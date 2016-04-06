@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-import models
-from connect import DBConnect
+from . import models
+from .connect import DBConnect
 
 class Paster():
     def __enter__(self):

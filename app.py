@@ -8,6 +8,8 @@ import hashlib
 import io
 import magic
 import validators
+import json
+from db import paste
 app = Flask(__name__)
 
 def filedata(fs):
@@ -16,11 +18,13 @@ def filedata(fs):
         print(type(buf))
         if buf and isinstance(buf, io.BytesIO):
             data = buf.read()
-            open('outfile', 'wb').write(data)
             mime = magic.from_buffer(data, mime=True)
-            open('mime', 'wb').write(mime)
-            return hashlib.sha1(data).hexdigest(), mime
+            with paste.Paster() as p:
+                return json.dumps(p.create(data, mime=mime))
+        return None
         if buf and isinstance(buf, io.BufferedRandom):
+            with paste.Paster() as p:
+                return json.dumps(p.create(buf))
             return 'working'
     except IOError as e:
         return 'caught exception in filedata' + str(e)
@@ -60,6 +64,11 @@ def hello():
     print(request.files)
     print('fell through')
     return 'fell through'
+
+@app.route("/a")
+def getthisshit():
+    with paste.Paster() as p:
+        return p.query(id=1).get('data')
 
 """
     if request.method == 'POST':

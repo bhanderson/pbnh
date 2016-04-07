@@ -6,7 +6,5 @@ Note, psycopg2 is a C extension module. You can grab the dependencies by either 
 To configure postgres (assuming debian/ubuntu, other distros should be similar):
 `# apt-get install postgres
 # su - postgres
-$ psql
-postgres=# CREATE USER X WITH PASSWORD 'Y';
-postgres=# \q`
+$ createuser -s $USERNAME`
 

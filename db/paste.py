@@ -8,8 +8,12 @@ from . import models
 from .connect import DBConnect
 
 class Paster():
+    def __init__(self, dialect='sqlite', dbname='test.db'):
+        self.dialect = dialect
+        self.dbname = dbname
+
     def __enter__(self):
-        connection = DBConnect(dialect='sqlite', dbname='test.db').connect
+        connection = DBConnect(dialect=self.dialect, dbname=self.dbname).connect
         self.engine = create_engine(connection)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
@@ -19,7 +23,8 @@ class Paster():
         self.session.close()
         self.engine.dispose()
 
-    def create(self, data, ip=None, mac=None, mime=None, sunset=None):
+    def create(self, data, ip=None, mac=None, mime=None, sunset=None,
+               timestamp=None):
         sha1 = hashlib.sha1(data).hexdigest()
         paste = models.Paste(
                 hashid = sha1,
@@ -27,6 +32,7 @@ class Paster():
                 mac = mac,
                 mime = mime,
                 sunset = sunset,
+                timestamp = timestamp,
                 data = data
                 )
         try:
@@ -61,12 +67,14 @@ class Paster():
 
         return result
 
-def main():
-    with Paster() as paste:
-        created = paste.create(b'This is a test paste')
-        print(created)
-        lookup = paste.query(hashid=created['hashid'])
-        return lookup
-
-if __name__ == "__main__":
-    print(main())
+    def delete(self, id=None, hashid=None):
+        if id:
+            result = (self.session.query(models.Paste)
+                      .filter(models.Paste.id == id).first())
+        elif hashid:
+            result = (self.session.query(models.Paste)
+                      .filter(models.Paste.hashid == hashid).first())
+        else:
+            return None
+        self.session.delete(result)
+        self.session.commit()

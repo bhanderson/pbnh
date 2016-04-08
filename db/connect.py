@@ -18,6 +18,9 @@ class DBConnect():
         if dbname:
             self._connect += '/' + dbname
 
+    def __repr__(self):
+        return self._connect
+
     @property
     def connect(self):
         """Connection string read-only property"""

@@ -2,6 +2,8 @@ import argparse
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database
 
+# ugly hack around import a shitty import system
+# TODO: Fix this once we get packaging working
 try:
     from . import models
     from .connect import DBConnect

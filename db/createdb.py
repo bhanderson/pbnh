@@ -21,25 +21,16 @@ class CreateDB():
             connection = DBConnect(
                     dialect='sqlite',
                     dbname=self.dbname
-                    ).connect
+                    )
         elif self.dialect == 'postgresql':
-            tmpconn = DBConnect(
-                    dialect='postgresql',
-                    dbname='postgres'
-                    ).connect
-            engine = create_engine(tmpconn)
-            conn = engine.connect()
-            conn.execute('commit')
-            conn.execute('create database ' + self.dbname + ';')
-            conn.close()
-            engine.dispose()
             connection = DBConnect(
                     dialect='postgresql',
                     dbname=self.dbname
-                    ).connect
+                    )
         else:
             return 'No database could be created'
-        engine = create_engine(connection)
+        create_database(str(connection))
+        engine = create_engine(str(connection))
         models.Base.metadata.create_all(engine)
         return connection
 

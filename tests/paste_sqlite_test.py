@@ -35,7 +35,7 @@ class TestPaster(unittest.TestCase):
         self.assertEqual(
                 created,
                 {
-                    'id': 'HASH COLLISION',
+                    'id': 1,
                     'hashid': 'f872a542a8289d2273f6cb455198e06126f4ec30'
                     }
                 )

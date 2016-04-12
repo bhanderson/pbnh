@@ -1,8 +1,8 @@
 #!/bin/env/python
 from flask import Flask, request, send_file, render_template, redirect
-from pygments import highlight
+from pygments import highlight, util
 from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_for_mimetype, guess_lexer
+from pygments.lexers import get_lexer_for_mimetype, guess_lexer, get_lexer_for_filename
 from werkzeug.datastructures import FileStorage
 import hashlib
 import io
@@ -12,13 +12,17 @@ import json
 from db import paste
 app = Flask(__name__)
 
+DATABASE='postgresql'
+DEBUG=True
+
 def filedata(fs):
     try:
         buf = fs.stream
         if buf and isinstance(buf, io.BytesIO):
             data = buf.read()
             mime = magic.from_buffer(data, mime=True)
-            with paste.Paster(dialect='postgresql') as p:
+            print(mime)
+            with paste.Paster(dialect=DATABASE) as p:
                 j = p.create(data,mime=mime.decode('utf-8'))
                 if j.get('id') == 'HASH COLLISION':
                     q = p.query(hashid=j.get('hashid'))
@@ -26,7 +30,7 @@ def filedata(fs):
                     return json.dumps(d)
                 return json.dumps(j)
         if buf and isinstance(buf, io.BufferedRandom):
-            with paste.Paster(dialect='postgresql') as p:
+            with paste.Paster(dialect=DATABASE) as p:
                 return json.dumps(p.create(buf))
     except IOError as e:
         return 'caught exception in filedata' + str(e)
@@ -67,13 +71,20 @@ def hello():
     return 'fell through'
 
 @app.route("/<int:paste_id>")
-def getthisshit(paste_id):
-    with paste.Paster(dialect='postgresql') as p:
+def view_paste(paste_id, filetype=None):
+    with paste.Paster(dialect=DATABASE) as p:
         query = p.query(id=paste_id)
         if query:
             mime = query.get('mime')
+            print(mime)
             if mime[:4] == 'text':
-                lexer = get_lexer_for_mimetype(mime)
+                if not filetype:
+                    lexer = get_lexer_for_mimetype(mime)
+                else:
+                    try:
+                        lexer = get_lexer_for_filename(filetype)
+                    except util.ClassNotFound:
+                        lexer = get_lexer_for_mimetype(mime)
                 html = highlight(query.get('data'), lexer,
                 HtmlFormatter(style='colorful', full=True, linenos=True))
                 return render_template('paste.html', paste=html)
@@ -81,5 +92,9 @@ def getthisshit(paste_id):
             return send_file(f, mimetype=mime)
         return 'Error: paste not found'
 
+@app.route("/<int:paste_id>.<string:filetype>")
+def view_paste_with_extension(paste_id, filetype):
+    return view_paste(paste_id, "file." + filetype)
+
 if __name__ == "__main__":
-    app.run('0.0.0.0', port=5001, debug=True)
+    app.run('0.0.0.0', port=5001, debug=DEBUG)

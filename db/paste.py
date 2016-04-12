@@ -26,22 +26,29 @@ class Paster():
     def create(self, data, ip=None, mac=None, mime=None, sunset=None,
                timestamp=None):
         sha1 = hashlib.sha1(data).hexdigest()
-        paste = models.Paste(
-                hashid = sha1,
-                ip = ip,
-                mac = mac,
-                mime = mime,
-                sunset = sunset,
-                timestamp = timestamp,
-                data = data
-                )
-        try:
-            self.session.add(paste)
-            self.session.commit()
-        except IntegrityError:
-            paste.id = 'HASH COLLISION'
-            self.session.rollback()
-        return {'id': paste.id, 'hashid': sha1}
+        collision = self.query(hashid=sha1)
+        if collision:
+            print(collision)
+            pasteid = collision.get('id')
+        else:
+            paste = models.Paste(
+                    hashid = sha1,
+                    ip = ip,
+                    mac = mac,
+                    mime = mime,
+                    sunset = sunset,
+                    timestamp = timestamp,
+                    data = data
+                    )
+            try:
+                self.session.add(paste)
+                self.session.commit()
+            except IntegrityError:
+                pasteid = 'HASH COLLISION'
+                self.session.rollback()
+            else:
+                pasteid = paste.id
+        return {'id': pasteid, 'hashid': sha1}
 
     def query(self, id=None, hashid=None):
         result = None

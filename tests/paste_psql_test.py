@@ -1,12 +1,11 @@
-from datetime import datetime
-import os
 import unittest
 
+from datetime import datetime
 from sqlalchemy_utils import drop_database
 
 from db.createdb import CreateDB
-from db import paste
 from db.connect import DBConnect
+from db import paste
 
 dialect = 'postgresql'
 dbname = 'testdb'
@@ -37,7 +36,7 @@ class TestPaster(unittest.TestCase):
         self.assertEqual(
                 created,
                 {
-                    'id': 'HASH COLLISION',
+                    'id': 1,
                     'hashid': 'f872a542a8289d2273f6cb455198e06126f4ec30'
                     }
                 )

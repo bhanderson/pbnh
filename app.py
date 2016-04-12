@@ -2,7 +2,7 @@
 from flask import Flask, request, send_file, render_template, redirect
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_for_mimetype
+from pygments.lexers import get_lexer_for_mimetype, guess_lexer
 from werkzeug.datastructures import FileStorage
 import hashlib
 import io
@@ -59,7 +59,7 @@ def hello():
             return filedata(files)
     else:
         print("get")
-        return returnfile()
+        return 'welcome try to curl a paste:\ncat filename | curl -F c=@- server'
     print(request.form)
     print(request.files)
     print('fell through')
@@ -69,29 +69,16 @@ def hello():
 def getthisshit(paste_id):
     with paste.Paster() as p:
         query = p.query(id=paste_id)
+        mime = query.get('mime').decode('utf-8')
         if query:
-            return query.get('data')
+            if mime[:4] == 'text':
+                lexer = get_lexer_for_mimetype(mime)
+                html = highlight(query.get('data'), lexer,
+                HtmlFormatter(style='colorful', full=True, linenos=True))
+                return render_template('paste.html', paste=html)
+            f = io.BytesIO(query.get('data'))
+            return send_file(f, mimetype=mime)
         return 'Error: paste not found'
 
-"""
-    if request.method == 'POST':
-    else:
-        filename = 'filename'
-        # open the file
-        f = open(filename, 'rb').read()
-        # read the mimetype of the file we saved
-        mime = open('mime', 'r').read()
-        # get the bytestream of the file
-        binstream = io.BytesIO(f)
-        if mime == 'text/plain':
-            lexer = guess_lexer(f.decode("utf-8"))
-            #print(lexer)
-            html = highlight(f, lexer, HtmlFormatter(style='colorful'))
-            print(html)
-            return render_template('paste.html', paste=html)
-            pass
-        else:
-            return send_file(binstream, attachment_filename=filename, mimetype=mime)
-"""
 if __name__ == "__main__":
     app.run('0.0.0.0', port=5001, debug=True)

@@ -1,37 +1,39 @@
 #!/bin/env/python
-from flask import Flask, request, send_file, render_template, redirect
-from pygments import highlight, util
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_for_mimetype, guess_lexer, get_lexer_for_filename
-from werkzeug.datastructures import FileStorage
 import hashlib
 import io
+import json
 import magic
 import validators
-import json
+
+from flask import Flask, request, send_file, render_template, redirect
+from pygments import highlight, util, formatters
+from pygments.lexers import get_lexer_for_mimetype, get_lexer_for_filename
+from sqlalchemy import exc
+from werkzeug.datastructures import FileStorage
+
 from db import paste
+
 app = Flask(__name__)
 
-DATABASE='postgresql'
-DEBUG=True
+DATABASE = 'postgresql'
+DBNAME = 'testdb'
+DEBUG = True
 
-def filedata(fs):
+def filedata(files):
     try:
-        buf = fs.stream
+        buf = files.stream
         if buf and isinstance(buf, io.BytesIO):
             data = buf.read()
             mime = magic.from_buffer(data, mime=True)
             print(mime)
-            with paste.Paster(dialect=DATABASE) as p:
-                j = p.create(data,mime=mime.decode('utf-8'))
-                if j.get('id') == 'HASH COLLISION':
-                    q = p.query(hashid=j.get('hashid'))
-                    d = {'id': q.get('id'), 'hashid': q.get('hashid')}
-                    return json.dumps(d)
+            with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+                j = pstr.create(data, mime=mime.decode('utf-8'))
                 return json.dumps(j)
         if buf and isinstance(buf, io.BufferedRandom):
-            with paste.Paster(dialect=DATABASE) as p:
-                return json.dumps(p.create(buf))
+            with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+                data = buf.read()
+                mime = magic.from_buffer(data, mime=True)
+                return json.dumps(pstr.create(data, mime=mime.decode('utf-8')))
     except IOError as e:
         return 'caught exception in filedata' + str(e)
     return 'File save error, your file is probably too big'
@@ -47,8 +49,8 @@ def returnfile():
     mime = open('mime', 'r').read()
     if mime.split('/')[0] == 'text':
         result = highlight(f, get_lexer_for_mimetype(mime),
-                           HtmlFormatter(linenos=True, full=True,
-                                         style='colorful'))
+                           formatters.HtmlFormatter(linenos=True, full=True,
+                                                    style='colorful'))
         return render_template('paste.html', paste=result)
     binstream = io.BytesIO(f)
     return send_file(binstream, mimetype=mime)
@@ -70,10 +72,13 @@ def hello():
     print('fell through')
     return 'fell through'
 
-@app.route("/<int:paste_id>")
-def view_paste(paste_id, filetype=None):
-    with paste.Paster(dialect=DATABASE) as p:
-        query = p.query(id=paste_id)
+@app.route("/<string:paste_id>")
+def view_paste(paste_id, filetype=None, hashid=False):
+    with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+        try:
+            query = pstr.query(id=paste_id)
+        except exc.DataError:
+            query = pstr.query(hashid=paste_id)
         if query:
             mime = query.get('mime')
             print(mime)
@@ -86,10 +91,14 @@ def view_paste(paste_id, filetype=None):
                     except util.ClassNotFound:
                         lexer = get_lexer_for_mimetype(mime)
                 html = highlight(query.get('data'), lexer,
-                HtmlFormatter(style='colorful', full=True, linenos=True))
+                                 formatters.HtmlFormatter(style='colorful',
+                                                          full=True,
+                                                          linenos=True))
                 return render_template('paste.html', paste=html)
-            f = io.BytesIO(query.get('data'))
-            return send_file(f, mimetype=mime)
+            data = io.BytesIO(query.get('data'))
+            return send_file(data, mimetype=mime)
+        if not hashid:
+            return view_paste(paste_id, filetype, hashid=True)
         return 'Error: paste not found'
 
 @app.route("/<int:paste_id>.<string:filetype>")

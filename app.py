@@ -15,17 +15,19 @@ app = Flask(__name__)
 def filedata(fs):
     try:
         buf = fs.stream
-        print(type(buf))
         if buf and isinstance(buf, io.BytesIO):
             data = buf.read()
             mime = magic.from_buffer(data, mime=True)
-            with paste.Paster() as p:
-                return json.dumps(p.create(data, mime=mime))
-        return None
+            with paste.Paster(dialect='postgresql') as p:
+                j = p.create(data,mime=mime.decode('utf-8'))
+                if j.get('id') == 'HASH COLLISION':
+                    q = p.query(hashid=j.get('hashid'))
+                    d = {'id': q.get('id'), 'hashid': q.get('hashid')}
+                    return json.dumps(d)
+                return json.dumps(j)
         if buf and isinstance(buf, io.BufferedRandom):
-            with paste.Paster() as p:
+            with paste.Paster(dialect='postgresql') as p:
                 return json.dumps(p.create(buf))
-            return 'working'
     except IOError as e:
         return 'caught exception in filedata' + str(e)
     return 'File save error, your file is probably too big'
@@ -58,8 +60,7 @@ def hello():
         if files and isinstance(files, FileStorage): # we got a file
             return filedata(files)
     else:
-        print("get")
-        return 'welcome try to curl a paste:\ncat filename | curl -F c=@- server'
+        return 'welcome try to curl a paste:<br>cat filename | curl -F c=@- server'
     print(request.form)
     print(request.files)
     print('fell through')
@@ -67,10 +68,10 @@ def hello():
 
 @app.route("/<int:paste_id>")
 def getthisshit(paste_id):
-    with paste.Paster() as p:
+    with paste.Paster(dialect='postgresql') as p:
         query = p.query(id=paste_id)
-        mime = query.get('mime').decode('utf-8')
         if query:
+            mime = query.get('mime')
             if mime[:4] == 'text':
                 lexer = get_lexer_for_mimetype(mime)
                 html = highlight(query.get('data'), lexer,

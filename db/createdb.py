@@ -12,9 +12,9 @@ except SystemError:
     from connect import DBConnect
 
 class CreateDB():
-    def __init__(self, dialect='sqlite', dbname='test'):
-        self.dialect = dialect
-        self.dbname = dbname
+    def __init__(self, dialect=None, dbname=None):
+        self.dialect = dialect or 'sqlite'
+        self.dbname = dbname or 'test'
 
     def create(self):
         if self.dialect == 'sqlite':

@@ -1,12 +1,11 @@
-from datetime import datetime
-import os
 import unittest
 
+from datetime import datetime
 from sqlalchemy_utils import drop_database
 
 from db.createdb import CreateDB
-from db import paste
 from db.connect import DBConnect
+from db import paste
 
 dialect = 'postgresql'
 dbname = 'testdb'

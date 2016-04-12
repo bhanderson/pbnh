@@ -12,7 +12,7 @@ except SystemError:
     from connect import DBConnect
 
 class CreateDB():
-    def __init__(self, dialect, dbname='test'):
+    def __init__(self, dialect='sqlite', dbname='test'):
         self.dialect = dialect
         self.dbname = dbname
 
@@ -36,9 +36,9 @@ class CreateDB():
 
 def main():
     parser = argparse.ArgumentParser(description='Initialize a paste db')
-    parser.add_argument('-t', '--type', default='sqlite',
+    parser.add_argument('-t', '--type',
                         help='sqlite or postgresql')
-    parser.add_argument('-d', '--dbname', default='test.db',
+    parser.add_argument('-d', '--dbname',
                         help='name of the database to be created')
     args = parser.parse_args()
     newdb = CreateDB(args.type, args.dbname)

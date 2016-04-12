@@ -4,8 +4,9 @@ import io
 import json
 import magic
 import validators
+import re
 
-from flask import Flask, request, send_file, render_template, redirect
+from flask import Flask, request, send_file, render_template, redirect, Response
 from pygments import highlight, util, formatters
 from pygments.lexers import get_lexer_for_mimetype, get_lexer_for_filename
 from sqlalchemy import exc
@@ -74,6 +75,8 @@ def hello():
 
 @app.route("/<string:paste_id>")
 def view_paste(paste_id, filetype=None, hashid=False):
+    if not re.match("^[A-Za-z0-9_-]*$", str(paste_id)):
+        return "invalid extension"
     with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
         try:
             query = pstr.query(id=paste_id)
@@ -81,7 +84,7 @@ def view_paste(paste_id, filetype=None, hashid=False):
             query = pstr.query(hashid=paste_id)
         if query:
             mime = query.get('mime')
-            print(mime)
+            data = query.get('data')
             if mime[:4] == 'text':
                 if not filetype:
                     lexer = get_lexer_for_mimetype(mime)
@@ -89,8 +92,8 @@ def view_paste(paste_id, filetype=None, hashid=False):
                     try:
                         lexer = get_lexer_for_filename(filetype)
                     except util.ClassNotFound:
-                        lexer = get_lexer_for_mimetype(mime)
-                html = highlight(query.get('data'), lexer,
+                        return Response(data, mimetype='text/plain')
+                html = highlight(data, lexer,
                                  formatters.HtmlFormatter(style='colorful',
                                                           full=True,
                                                           linenos=True))

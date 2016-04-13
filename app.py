@@ -80,7 +80,7 @@ def view_paste(paste_id, filetype=None, hashid=False):
     with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
         try:
             query = pstr.query(id=paste_id)
-        except exc.DataError:
+        except ValueError:
             query = pstr.query(hashid=paste_id)
         if query:
             mime = query.get('mime')

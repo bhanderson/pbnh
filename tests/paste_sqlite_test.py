@@ -78,6 +78,12 @@ class TestPaster(unittest.TestCase):
                     }
                 )
 
+    def test_query_disaster(self):
+        with paste.Paster(dialect, dbname) as p:
+            p.create(b'This is a test paste')
+            lookup = p.query(id='f872a542a8289d2273f6cb455198e06126f4ec30')
+        self.assertEqual(lookup, None)
+
     def test_query_none(self):
         with paste.Paster(dialect, dbname) as p:
             p.create(b'This is a test paste')

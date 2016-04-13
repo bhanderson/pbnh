@@ -17,7 +17,7 @@ from db import paste
 app = Flask(__name__)
 
 DATABASE = 'postgresql'
-DBNAME = 'testdb'
+DBNAME = 'pastedb'
 DEBUG = True
 
 def filedata(files):

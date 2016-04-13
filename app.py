@@ -1,31 +1,40 @@
 #!/bin/env/python
-from flask import Flask, request, send_file, render_template, redirect
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_for_mimetype
-from werkzeug.datastructures import FileStorage
 import hashlib
 import io
+import json
 import magic
 import validators
-import json
+import re
+
+from flask import Flask, request, send_file, render_template, redirect, Response
+from pygments import highlight, util, formatters
+from pygments.lexers import get_lexer_for_mimetype, get_lexer_for_filename
+from sqlalchemy import exc
+from werkzeug.datastructures import FileStorage
+
 from db import paste
+
 app = Flask(__name__)
 
-def filedata(fs):
+DATABASE = 'postgresql'
+DBNAME = 'testdb'
+DEBUG = True
+
+def filedata(files):
     try:
-        buf = fs.stream
-        print(type(buf))
+        buf = files.stream
         if buf and isinstance(buf, io.BytesIO):
             data = buf.read()
             mime = magic.from_buffer(data, mime=True)
-            with paste.Paster() as p:
-                return json.dumps(p.create(data, mime=mime))
-        return None
+            print(mime)
+            with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+                j = pstr.create(data, mime=mime.decode('utf-8'))
+                return json.dumps(j)
         if buf and isinstance(buf, io.BufferedRandom):
-            with paste.Paster() as p:
-                return json.dumps(p.create(buf))
-            return 'working'
+            with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+                data = buf.read()
+                mime = magic.from_buffer(data, mime=True)
+                return json.dumps(pstr.create(data, mime=mime.decode('utf-8')))
     except IOError as e:
         return 'caught exception in filedata' + str(e)
     return 'File save error, your file is probably too big'
@@ -41,8 +50,8 @@ def returnfile():
     mime = open('mime', 'r').read()
     if mime.split('/')[0] == 'text':
         result = highlight(f, get_lexer_for_mimetype(mime),
-                           HtmlFormatter(linenos=True, full=True,
-                                         style='colorful'))
+                           formatters.HtmlFormatter(linenos=True, full=True,
+                                                    style='colorful'))
         return render_template('paste.html', paste=result)
     binstream = io.BytesIO(f)
     return send_file(binstream, mimetype=mime)
@@ -58,40 +67,46 @@ def hello():
         if files and isinstance(files, FileStorage): # we got a file
             return filedata(files)
     else:
-        print("get")
-        return returnfile()
+        return 'welcome try to curl a paste:<br>cat filename | curl -F c=@- server'
     print(request.form)
     print(request.files)
     print('fell through')
     return 'fell through'
 
-@app.route("/<int:paste_id>")
-def getthisshit(paste_id):
-    with paste.Paster() as p:
-        query = p.query(id=paste_id)
+@app.route("/<string:paste_id>")
+def view_paste(paste_id, filetype=None, hashid=False):
+    if not re.match("^[A-Za-z0-9_-]*$", str(paste_id)):
+        return "invalid extension"
+    with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+        try:
+            query = pstr.query(id=paste_id)
+        except exc.DataError:
+            query = pstr.query(hashid=paste_id)
         if query:
-            return query.get('data')
+            mime = query.get('mime')
+            data = query.get('data')
+            if mime[:4] == 'text':
+                if not filetype:
+                    lexer = get_lexer_for_mimetype(mime)
+                else:
+                    try:
+                        lexer = get_lexer_for_filename(filetype)
+                    except util.ClassNotFound:
+                        return Response(data, mimetype='text/plain')
+                html = highlight(data, lexer,
+                                 formatters.HtmlFormatter(style='colorful',
+                                                          full=True,
+                                                          linenos=True))
+                return render_template('paste.html', paste=html)
+            data = io.BytesIO(query.get('data'))
+            return send_file(data, mimetype=mime)
+        if not hashid:
+            return view_paste(paste_id, filetype, hashid=True)
         return 'Error: paste not found'
 
-"""
-    if request.method == 'POST':
-    else:
-        filename = 'filename'
-        # open the file
-        f = open(filename, 'rb').read()
-        # read the mimetype of the file we saved
-        mime = open('mime', 'r').read()
-        # get the bytestream of the file
-        binstream = io.BytesIO(f)
-        if mime == 'text/plain':
-            lexer = guess_lexer(f.decode("utf-8"))
-            #print(lexer)
-            html = highlight(f, lexer, HtmlFormatter(style='colorful'))
-            print(html)
-            return render_template('paste.html', paste=html)
-            pass
-        else:
-            return send_file(binstream, attachment_filename=filename, mimetype=mime)
-"""
+@app.route("/<int:paste_id>.<string:filetype>")
+def view_paste_with_extension(paste_id, filetype):
+    return view_paste(paste_id, "file." + filetype)
+
 if __name__ == "__main__":
-    app.run('0.0.0.0', port=5001, debug=True)
+    app.run('0.0.0.0', port=5001, debug=DEBUG)

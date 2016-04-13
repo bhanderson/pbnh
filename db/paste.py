@@ -1,7 +1,7 @@
 import codecs
 import hashlib
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker
 
 from . import models
@@ -53,11 +53,19 @@ class Paster():
     def query(self, id=None, hashid=None):
         result = None
         if id:
-            result = (self.session.query(models.Paste)
-                      .filter(models.Paste.id == id).first())
+            try:
+                result = (self.session.query(models.Paste)
+                          .filter(models.Paste.id == id).first())
+            except DataError:
+                self.session.rollback()
+                raise ValueError
         elif hashid:
-            result = (self.session.query(models.Paste)
-                      .filter(models.Paste.hashid == hashid).first())
+            try:
+                result = (self.session.query(models.Paste)
+                          .filter(models.Paste.hashid == hashid).first())
+            except DataError:
+                self.session.rollback()
+                raise ValueError
         else:
             return None
         if result:

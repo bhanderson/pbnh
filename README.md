@@ -8,5 +8,5 @@ To configure postgres (assuming debian/ubuntu, other distros should be similar):
 # apt-get install postgres
 # su - postgres
 $ createuser -s $USERNAME
-python3 db/createdb.py -t postgresql -d testdb
+python3 db/createdb.py -t postgresql -d pastedb
 ```

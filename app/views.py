@@ -14,7 +14,9 @@ from werkzeug.datastructures import FileStorage
 
 from db import paste
 
-app = Flask(__name__)
+from app import app
+
+#app = Flask(__name__)
 
 DATABASE = 'postgresql'
 DBNAME = 'pastedb'
@@ -108,5 +110,3 @@ def view_paste(paste_id, filetype=None, hashid=False):
 def view_paste_with_extension(paste_id, filetype):
     return view_paste(paste_id, "file." + filetype)
 
-if __name__ == "__main__":
-    app.run('0.0.0.0', port=5001, debug=DEBUG)

@@ -9,7 +9,7 @@ URL = 'http://localhost:5001/'
 class TestPost(unittest.TestCase):
     def setUp(self):
         self.c = pycurl.Curl()
-        self.c.setopt(self.c.URL, URL)
+        self.c.setopt(pycurl.URL, URL)
         pass
 
     def tearDown(self):
@@ -20,20 +20,39 @@ class TestPost(unittest.TestCase):
         #c = pycurl.Curl()
         data = [('c', 'abc')]
         ret = []
-        self.c.setopt(self.c.HTTPPOST, data)
-        self.c.setopt(self.c.WRITEFUNCTION, ret.append)
+        self.c.setopt(pycurl.HTTPPOST, data)
+        self.c.setopt(pycurl.WRITEFUNCTION, ret.append)
         self.c.perform()
         r = ret.pop()
         self.failUnlessEqual(r, b'a9993e364706816aba3e25717850c26c9cd0d89d')
 
     def test_file_send(self):
         data = [('c', (pycurl.FORM_FILE, __file__))]
-        self.c.setopt(self.c.HTTPPOST, data)
+        self.c.setopt(pycurl.HTTPPOST, data)
         ret = []
-        self.c.setopt(self.c.WRITEFUNCTION, ret.append)
+        self.c.setopt(pycurl.WRITEFUNCTION, ret.append)
         self.c.perform()
-        print(ret)
+        #print(ret)
         r = json.loads(ret.pop().decode('utf-8'))
         f = open(__file__, 'r')
         filehash = hashlib.sha1(f.read().encode('utf-8')).hexdigest()
         self.failUnlessEqual(filehash, r.get('hashid'))
+        return r
+
+    def test_get_file(self):
+        # verify the file exists
+        r = self.test_file_send()
+        ret = []
+        #print(r)
+        id = r.get('id')
+        self.c.reset() # we need this for some dumb reason
+        self.c.setopt(pycurl.URL, URL + str(id) + '.raw')
+        self.c.setopt(pycurl.WRITEFUNCTION, ret.append)
+        self.c.perform()
+        self.failUnless(ret)
+        self.failUnlessEqual(hashlib.sha1(ret[0]).hexdigest(), r.get('hashid'))
+
+    def test_get_file_with_hash(self):
+        #not working anyways
+        pass
+

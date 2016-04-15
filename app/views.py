@@ -32,7 +32,7 @@ def hello():
     print('fell through')
     return 'fell through'
 
-@app.route("/<string:paste_id>")
+@app.route("/<string:paste_id>", methods=["GET"])
 def view_paste(paste_id, filetype=None, hashid=False):
     if not re.match("^[A-Za-z0-9_-]*$", str(paste_id)):
         return "invalid extension"

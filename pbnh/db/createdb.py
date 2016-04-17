@@ -2,14 +2,9 @@ import argparse
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database
 
-# ugly hack around import a shitty import system
-# TODO: Fix this once we get packaging working
-try:
-    from . import models
-    from .connect import DBConnect
-except SystemError:
-    import models
-    from connect import DBConnect
+from pbnh import conf
+from pbnh import models
+from pbnh.connect import DBConnect
 
 class CreateDB():
     def __init__(self, dialect=None, dbname=None):
@@ -35,10 +30,11 @@ class CreateDB():
         return connection
 
 def main():
+    config = conf.get_config().get('database')
     parser = argparse.ArgumentParser(description='Initialize a paste db')
-    parser.add_argument('-t', '--type',
+    parser.add_argument('-t', '--type', default=config.get('dialect'),
                         help='sqlite or postgresql')
-    parser.add_argument('-d', '--dbname',
+    parser.add_argument('-d', '--dbname', default=config.get('dbname'),
                         help='name of the database to be created')
     args = parser.parse_args()
     newdb = CreateDB(args.type, args.dbname)

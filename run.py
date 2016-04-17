@@ -1,2 +1,4 @@
 from app import app
-app.run('0.0.0.0', port=5001, debug=True)
+import conf
+conf = conf.get_config().get('server')
+app.run(conf.get('bind_ip'), port=conf.get('bind_port'), debug=conf.get('debug'))

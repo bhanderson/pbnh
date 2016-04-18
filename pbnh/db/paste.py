@@ -8,9 +8,16 @@ from pbnh.db import models
 from pbnh.db.connect import DBConnect
 
 class Paster():
-    def __init__(self, dialect='sqlite', dbname='test.db'):
+    def __init__(self, dialect='sqlite', driver=None, username=None, password=None,
+                 host=None, port=None, dbname='pastedb'):
+        """Grab connection information to pass to DBConnect"""
         self.dialect = dialect
         self.dbname = dbname
+        self.driver = driver
+        self.username = username
+        self.password = password
+        self.host = host
+        self.port = port
 
     def __enter__(self):
         connection = DBConnect(dialect=self.dialect, dbname=self.dbname).connect

@@ -1,6 +1,6 @@
 server:
   bind_ip   : "0.0.0.0"
-  bind_port : 5002
+  bind_port : 5001
   debug     : True
 
 database:

@@ -8,13 +8,14 @@ from pygments.lexers import get_lexer_for_mimetype, get_lexer_for_filename
 from sqlalchemy import exc
 from werkzeug.datastructures import FileStorage
 
-from db import paste
-from app import app
-from app import util
+from pbnh import conf
+from pbnh.db import paste
+from pbnh.app import app
+from pbnh.app import util
 
-# we really need to put these into a config file
-DATABASE = 'postgresql'
-DBNAME = 'pastedb'
+config = conf.get_config()
+DATABASE = config.get('database').get('dialect')
+DBNAME = config.get('database').get('dbname')
 
 @app.route("/", methods=["GET", "POST"])
 def hello():

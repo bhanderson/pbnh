@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker
 
-from db import models
-from db.connect import DBConnect
+from pbnh.db import models
+from pbnh.db.connect import DBConnect
 
 class Paster():
     def __init__(self, dialect='sqlite', dbname='test.db'):

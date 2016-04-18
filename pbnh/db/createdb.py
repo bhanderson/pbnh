@@ -3,8 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database
 
 from pbnh import conf
-from pbnh import models
-from pbnh.connect import DBConnect
+from pbnh.db import models
+from pbnh.db.connect import DBConnect
 
 class CreateDB():
     def __init__(self, dialect=None, dbname=None):

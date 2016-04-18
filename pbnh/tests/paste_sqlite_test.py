@@ -3,8 +3,8 @@ import unittest
 
 from datetime import datetime
 
-from db.createdb import CreateDB
-from db import paste
+from pbnh.db.createdb import CreateDB
+from pbnh.db import paste
 
 dialect = 'sqlite'
 dbname = '/tmp/pbnh_test.db'

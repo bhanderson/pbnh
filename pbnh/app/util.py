@@ -4,7 +4,7 @@ import json
 import magic
 import validators
 
-from db import paste
+from pbnh.db import paste
 
 # we really need to put these into a config file
 DATABASE = 'postgresql'

@@ -3,9 +3,9 @@ import unittest
 from datetime import datetime
 from sqlalchemy_utils import drop_database
 
-from db.createdb import CreateDB
-from db.connect import DBConnect
-from db import paste
+from pbnh.db.createdb import CreateDB
+from pbnh.db.connect import DBConnect
+from pbnh.db import paste
 
 dialect = 'postgresql'
 dbname = 'testdb'

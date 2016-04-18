@@ -12,3 +12,10 @@ To configure postgres (assuming debian/ubuntu, other distros should be similar):
 $ createuser -s $USERNAME
 python3 db/createdb.py -t postgresql -d pastedb
 ```
+
+To install the pbnh package:
+```
+$ git clone https://github.com/bhanderson/pbnh.git
+$ cd pbnh
+$ pip install -e .
+```

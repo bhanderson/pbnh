@@ -1,16 +1,23 @@
 import codecs
 import hashlib
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker
 
-from db import models
-from db.connect import DBConnect
+from pbnh.db import models
+from pbnh.db.connect import DBConnect
 
 class Paster():
-    def __init__(self, dialect='sqlite', dbname='test.db'):
+    def __init__(self, dialect='sqlite', driver=None, username=None, password=None,
+                 host=None, port=None, dbname='pastedb'):
+        """Grab connection information to pass to DBConnect"""
         self.dialect = dialect
         self.dbname = dbname
+        self.driver = driver
+        self.username = username
+        self.password = password
+        self.host = host
+        self.port = port
 
     def __enter__(self):
         connection = DBConnect(dialect=self.dialect, dbname=self.dbname).connect
@@ -53,11 +60,19 @@ class Paster():
     def query(self, id=None, hashid=None):
         result = None
         if id:
-            result = (self.session.query(models.Paste)
-                      .filter(models.Paste.id == id).first())
+            try:
+                result = (self.session.query(models.Paste)
+                          .filter(models.Paste.id == id).first())
+            except DataError:
+                self.session.rollback()
+                raise ValueError
         elif hashid:
-            result = (self.session.query(models.Paste)
-                      .filter(models.Paste.hashid == hashid).first())
+            try:
+                result = (self.session.query(models.Paste)
+                          .filter(models.Paste.hashid == hashid).first())
+            except DataError:
+                self.session.rollback()
+                raise ValueError
         else:
             return None
         if result:

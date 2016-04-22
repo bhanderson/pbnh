@@ -4,7 +4,12 @@ import unittest
 import json
 import hashlib
 
-URL = 'http://localhost:5001/'
+from pbnh import conf
+
+config = conf.get_config().get('server')
+host = config.get('bind_ip')
+port = config.get('bind_port')
+URL = 'http://{}:{}/'.format(host, port)
 
 class TestPost(unittest.TestCase):
     def setUp(self):

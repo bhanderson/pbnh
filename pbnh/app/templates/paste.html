@@ -1,1 +1,16 @@
-{{ paste | safe }}
+<html>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/solarized-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<style>
+code {
+    height: 100%;
+}
+</style>
+    <body>
+        <pre><code class="{{mime}}">
+{{paste}}
+</code>
+        </pre>
+    </body>
+</html>

@@ -61,3 +61,19 @@ class TestPost(unittest.TestCase):
         #not working anyways
         pass
 
+    def test_set_and_get_redirect(self):
+        ret = []
+        testurl = 'http://abcdefgjikl.xyz'
+        data = [('r', testurl)]
+        self.c.setopt(pycurl.HTTPPOST, data)
+        self.c.setopt(pycurl.WRITEFUNCTION, ret.append)
+        self.c.perform()
+        if ret:
+            r = json.loads(ret.pop().decode('utf-8'))
+            self.c.reset()
+            self.c.setopt(pycurl.URL, URL + str(r.get('id')))
+            self.c.setopt(pycurl.WRITEFUNCTION, ret.append)
+            self.c.perform()
+            self.failUnless(testurl in ret.pop().decode('utf-8'))
+        else:
+            self.fail()

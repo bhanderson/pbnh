@@ -1,12 +1,14 @@
 import io
 import re
 
-from flask import request, send_file, render_template, Response
+from flask import request, send_file, render_template, Response, redirect
 import pygments
 from pygments import highlight, util, formatters
 from pygments.lexers import get_lexer_for_mimetype, get_lexer_for_filename
 from sqlalchemy import exc
 from werkzeug.datastructures import FileStorage
+from datetime import datetime, timezone, timedelta
+
 
 from pbnh import conf
 from pbnh.db import paste
@@ -20,13 +22,25 @@ DBNAME = config.get('database').get('dbname')
 @app.route("/", methods=["GET", "POST"])
 def hello():
     if request.method == 'POST':
+        addr = request.remote_addr
+        # First check c for paste content
         inputstr = request.form.get('c')
+        sunset = int(request.form.get('sunset'))
+        return 'hi'
+        if sunset and isinstance(sunset, int):
+            sunset = datetime.now(timezone.utc) + timedelta(seconds=sunset)
         if inputstr and isinstance(inputstr, str): # we didn't get a file we got a string
-            return util.stringdata(inputstr)
+            return util.stringdata(inputstr, addr=addr, sunset=sunset)
 
         files = request.files.get('c')
         if files and isinstance(files, FileStorage): # we got a file
-            return util.filedata(files)
+            return util.filedata(files, addr=addr, sunset=sunset)
+        print(request.form.get('r'))
+        # Next check r for redirect info. this should only be string info, not a
+        # file
+        redirect = request.form.get('r')
+        if redirect:
+            return util.redirectdata(redirect, addr=addr, sunset=sunset)
     else:
         return 'welcome try to curl a paste:<br>cat filename | curl -F c=@- server'
     print(request.form)
@@ -46,6 +60,8 @@ def view_paste(paste_id, filetype=None, hashid=False):
         if query:
             mime = query.get('mime')
             data = query.get('data')
+            if mime == 'redirect':
+                return redirect(data)
             if mime[:4] == 'text':
                 if not filetype:
                     lexer = get_lexer_for_mimetype(mime)

@@ -51,7 +51,7 @@ def hello():
     return 'fell through'
 
 @app.route("/<string:paste_id>", methods=["GET"])
-def view_paste(paste_id, filetype=None, hashid=False):
+def view_paste(paste_id, filename=None, hashid=False):
     if not re.match("^[A-Za-z0-9_-]*$", str(paste_id)):
         return "invalid extension"
     with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
@@ -60,32 +60,31 @@ def view_paste(paste_id, filetype=None, hashid=False):
         except ValueError:
             query = pstr.query(hashid=paste_id)
         if query:
-            mime = query.get('mime')
+            if filename:
+                try:
+                    lexer = get_lexer_for_filename(filename)
+                    mime = lexer.mimetypes[0]
+                except pygments.util.ClassNotFound:
+                    mime = 'text/plain'
+            else:
+                mime = query.get('mime')
             data = query.get('data')
             if mime == 'redirect':
                 return redirect(data)
-            if mime[:4] == 'text':
-                print(mime[5:])
-                if not filetype:
-                    lexer = get_lexer_for_mimetype(mime)
-                else:
-                    try:
-                        lexer = get_lexer_for_filename(filetype)
-                    except pygments.util.ClassNotFound:
-                        return Response(data, mimetype='text/plain')
-                html = highlight(data, lexer,
-                                 formatters.HtmlFormatter(style='colorful',
-                                                          full=True,
-                                                          linenos=True))
-                #return render_template('paste.html', paste=html)
-                return render_template('paste.html', paste=data.decode('utf-8'), mime=mime[5:])
+            print(mime)
+            if mime.split('/')[0] == 'text':
+                print(len(data))
+                if len(data) > 5000:
+                    mime = 'text/plain'
+                    return render_template('raw.html', paste=data.decode('utf-8'), mime=mime)
+                return render_template('raw.html', paste=data.decode('utf-8'), mime=mime)
             data = io.BytesIO(query.get('data'))
             return send_file(data, mimetype=mime)
         if not hashid:
-            return view_paste(paste_id, filetype, hashid=True)
+            return view_paste(paste_id, filename, hashid=True)
+        return render_template('404.html')
         return 'Error: paste not found'
 
 @app.route("/<int:paste_id>.<string:filetype>")
 def view_paste_with_extension(paste_id, filetype):
     return view_paste(paste_id, "file." + filetype)
-

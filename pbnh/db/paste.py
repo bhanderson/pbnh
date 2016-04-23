@@ -20,10 +20,13 @@ class Paster():
         self.port = port
 
     def __enter__(self):
-        connection = DBConnect(dialect=self.dialect, dbname=self.dbname).connect
+        connection = DBConnect(dialect=self.dialect, driver=self.driver, username=self.username,
+                               password=self.password, host=self.host, port=self.port,
+                               dbname=self.dbname).connect
         self.engine = create_engine(connection)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
+        print(connection)
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):

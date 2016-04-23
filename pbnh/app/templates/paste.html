@@ -1,12 +1,14 @@
 <html>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/solarized-dark.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<link rel="stylesheet" href="{{url_for('static',
+filename='gruvbox-dark.min.css')}}?v={{mime}}">
+<script src="{{url_for('static', filename='highlight.min.js')}}"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 <style>
 code { position: absolute; top: 0; bottom: 0; left: 0; right:0; }
 </style>
     <body>
-        <pre><code class="{{mime}}">
+        <pre>
+<code class="{{mime}}">
 {{paste}}
 </code>
         </pre>

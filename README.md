@@ -49,14 +49,20 @@ We also support strings
 ```
 curl -F content="hello world!" servername.com
 ```
-There are three different inputs allowed in a curl command they are content, sunset, and mime.
+There are three different inputs allowed in a curl command they are content, sunset, and mime. Sunset and Mime are optional.
 ### Content
-Content is exactly what it sounds like. The content of the file or the string data you want to paste.
+Content is exactly what it sounds like. The content of the file or the string data you want to paste and can be seen in the examples above.
 ### Sunset
 Sunset is the amount of time you want this paste to be available. If sunset is specified you may specify for it to last a maximum of 24 hours. If unspecified the sunset value is 0 and the paste will not be removed.
+```
+curl -F content=@file.txt -F sunset=10 servername.com
+```
 ### Mime
-The mime type is how the file should be displayed. If text with highlighting, or if a file as an image. The default is plain text
-
+The mime type is how the file should be displayed. If text with highlighting, or if a file as an image. The default is plain text. A list of mimetypes can be found [here](http://www.freeformatter.com/mime-types-list.html). only specify the second half of the mimetype.
+For example for the mimetype 'application/pdf' only specify pdf.
+```
+curl -F content=@file.txt -F mime=plain servername.com
+```
 ## Tests
 Tests can be ran by running nosetests in the pbnh directory or by specifying a specific test
 

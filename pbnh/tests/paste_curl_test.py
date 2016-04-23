@@ -23,7 +23,7 @@ class TestPost(unittest.TestCase):
 
     def test_hash_string(self):
         #c = pycurl.Curl()
-        data = [('c', 'abc')]
+        data = [('content', 'abc')]
         ret = []
         self.c.setopt(pycurl.HTTPPOST, data)
         self.c.setopt(pycurl.WRITEFUNCTION, ret.append)
@@ -32,7 +32,7 @@ class TestPost(unittest.TestCase):
         self.failUnlessEqual(r, b'a9993e364706816aba3e25717850c26c9cd0d89d')
 
     def test_file_send(self):
-        data = [('c', (pycurl.FORM_FILE, __file__))]
+        data = [('content', (pycurl.FORM_FILE, __file__))]
         self.c.setopt(pycurl.HTTPPOST, data)
         ret = []
         self.c.setopt(pycurl.WRITEFUNCTION, ret.append)

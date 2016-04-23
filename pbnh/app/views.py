@@ -63,14 +63,13 @@ def post_paste():
 
     sunset = util.getSunsetFromStr(sunsetstr)
 
-    if inputstr and isinstance(inputstr, str): # we didn't get a file we got a string
-        return util.stringData(inputstr, addr=addr, sunset=sunset)
-
-    print("addr: {}".format(addr))
-    print("inputstr: {}".format(inputstr))
-    print("sunsetstr: {}".format(sunsetstr))
-    print("mimestr: {}".format(mimestr))
-    return 'pong'
+    # we got string data
+    if inputstr and isinstance(inputstr, str):
+        return util.stringData(inputstr, addr=addr, sunset=sunset, mime=mimestr)
+    # we got file data
+    if files and isinstance(files, FileStorage):
+        return util.fileData(files, addr=addr, sunset=sunset, mime=mimestr)
+    return "Please specify paste data by using -F content=@file.txt or -F content='hello world!'\n"
 
 
 
@@ -95,9 +94,9 @@ def view_paste(paste_id, filename=None, hashid=False):
             else:
                 mime = query.get('mime')
             data = query.get('data')
+            print(query)
             if mime == 'redirect':
                 return redirect(data)
-            print(mime)
             if mime.split('/')[0] == 'text':
                 print(len(data))
                 if len(data) > 5000:

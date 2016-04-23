@@ -21,7 +21,6 @@ def fileData(files, addr=None, sunset=None, mimestr=None):
                               driver=config.get('driver'), host=config.get('host'),
                               password=config.get('password'), port=config.get('port'),
                               username=config.get('username')) as pstr:
-                print(pstr.__dict__)
                 j = pstr.create(data, mime=mime, ip=addr,
                                 sunset=sunset)
                 return json.dumps(j)
@@ -48,7 +47,10 @@ def getSunsetFromStr(sunsetstr):
     return None
 
 def redirectData(redirect, addr=None, sunset=None):
-    with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+    with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
+		      driver=config.get('driver'), host=config.get('host'),
+		      password=config.get('password'), port=config.get('port'),
+		      username=config.get('username')) as pstr:
         j = pstr.create(redirect.encode('utf-8'), mime='redirect', ip=addr,
                 sunset=sunset)
         return json.dumps(j)
@@ -61,7 +63,10 @@ def getMime(data=None, mimestr=None):
     return 'text/plain'
 
 def getPaste(paste_id):
-    with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+    with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
+		      driver=config.get('driver'), host=config.get('host'),
+		      password=config.get('password'), port=config.get('port'),
+		      username=config.get('username')) as pstr:
         try:
             return pstr.query(id=paste_id)
         except ValueError:

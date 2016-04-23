@@ -15,7 +15,7 @@ class DBConnect():
             self._connect += host
             if port:
                 self._connect += ':' + port
-        elif dialect is 'postgresql' and username:
+        elif dialect == 'postgresql' and username:
             self._connect += '@localhost'
         if dbname:
             self._connect += '/' + dbname

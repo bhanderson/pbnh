@@ -51,8 +51,9 @@ def main():
     parser.add_argument('-P', '--port', default=config.get('username'),
                         help='port the database listens on')
     args = parser.parse_args()
-    newdb = CreateDB(args.type, args.dbname, args.driver, args.username, args.password,
-                     args.server, args.port)
+    newdb = CreateDB(dialect=args.type, driver=args.driver, username=args.username,
+                     password=args.password, host=args.server, port=args.port,
+                     dbname=args.dbname)
     print(newdb.create())
 
 if __name__ == "__main__":

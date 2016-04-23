@@ -10,8 +10,8 @@ class DBConnect():
             self._connect += username
             if password:
                 self._connect += ':' + password
-            self._connnect +='@'
         if host:
+            self._connect +='@'
             self._connect += host
             if port:
                 self._connect += ':' + port

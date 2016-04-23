@@ -21,6 +21,7 @@ def fileData(files, addr=None, sunset=None, mimestr=None):
                               driver=config.get('driver'), host=config.get('host'),
                               password=config.get('password'), port=config.get('port'),
                               username=config.get('username')) as pstr:
+                print(pstr.__dict__)
                 j = pstr.create(data, mime=mime, ip=addr,
                                 sunset=sunset)
                 return json.dumps(j)

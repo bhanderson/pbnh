@@ -15,7 +15,7 @@ class CreateDB():
         self.driver = driver
         self.username = username
         self.password = password
-        self.host = host or 'localhost'
+        self.host = host
         self.port = port
 
     def create(self):

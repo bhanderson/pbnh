@@ -1,6 +1,22 @@
 # pbnh
-mix between pb and haste
+pbnh is our implementation of a pastebin server using flask and postgres or sqlite
 
+It is highly derived from [silverp1's](https://github.com/silverp1) and [buhman's](https://github.com/buhman) project [pb](https://github.com/ptpb/pb) and they deserve the recognition for this idea.
+
+## Table of Contents
+ * [pbnh](#pbnh)
+ * [Table of contents](#table-of-contents)
+ * [Installation](#installation)
+ * [Usage](#usage)
+    * [Post](#post)
+        * [Content](#content)
+        * [Sunset](#sunset)
+        * [Mime](#mime)
+ * [Tests](#tests)
+ * [Dependency](#dependency)
+ * 
+
+## Installation
 Note, psycopg2 is a C extension module. You can grab the dependencies by either installing python-psycopg2 from your package manager, or grab libpq-dev as well as python3-dev and gcc if you don't already have them.
 
 pycurl (needed for unit tests) seems to depend on libcurl4-gnutls-dev librtmp-dev
@@ -19,3 +35,31 @@ $ git clone https://github.com/bhanderson/pbnh.git
 $ cd pbnh
 $ pip install -e .
 ```
+
+## Usage
+Currently the only way to use pbnh is with curl
+```
+curl -F content=@file.txt servername.com
+```
+Or you can cat a file
+```
+cat file.txt | curl -F content=@- servername.com
+```
+We also support strings
+```
+curl -F content="hello world!" servername.com
+```
+There are three different inputs allowed in a curl command they are content, sunset, and mime.
+### Content
+Content is exactly what it sounds like. The content of the file or the string data you want to paste.
+### Sunset
+Sunset is the amount of time you want this paste to be available. If sunset is specified you may specify for it to last a maximum of 24 hours. If unspecified the sunset value is 0 and the paste will not be removed.
+### Mime
+The mime type is how the file should be displayed. If text with highlighting, or if a file as an image. The default is plain text
+
+## Tests
+Tests can be ran by running nosetests in the pbnh directory or by specifying a specific test
+
+## Dependency
+#TODO
+

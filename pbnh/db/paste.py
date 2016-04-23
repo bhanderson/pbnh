@@ -26,7 +26,6 @@ class Paster():
         self.engine = create_engine(connection)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
-        print(connection)
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):

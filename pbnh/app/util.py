@@ -3,11 +3,10 @@ import io
 import json
 import magic
 
+from pbnh import conf
 from pbnh.db import paste
 
-# we really need to put these into a config file
-DATABASE = 'postgresql'
-DBNAME = 'pastedb'
+config = conf.get_config().get('database')
 
 def filedata(files, addr=None, sunset=None):
     try:
@@ -16,7 +15,10 @@ def filedata(files, addr=None, sunset=None):
                 io.BufferedRandom):
             data = buf.read()
             mime = magic.from_buffer(data, mime=True)
-            with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+            with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
+                              driver=config.get('driver'), host=config.get('host'),
+                              password=config.get('password'), port=config.get('port'),
+                              username=config.get('username')) as pstr:
                 j = pstr.create(data, mime=mime.decode('utf-8'), ip=addr,
                         sunset=sunset)
                 return json.dumps(j)

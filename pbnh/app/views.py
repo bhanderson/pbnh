@@ -12,9 +12,7 @@ from pbnh.db import paste
 from pbnh.app import app
 from pbnh.app import util
 
-config = conf.get_config()
-DATABASE = config.get('database').get('dialect')
-DBNAME = config.get('database').get('dbname')
+config = conf.get_config().get('database')
 
 @app.route("/", methods=["GET", "POST"])
 def hello():
@@ -51,7 +49,10 @@ def hello():
 def view_paste(paste_id, filename=None, hashid=False):
     if not re.match("^[A-Za-z0-9_-]*$", str(paste_id)):
         return "invalid extension"
-    with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+    with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
+                      driver=config.get('driver'), host=config.get('host'),
+                      password=config.get('password'), port=config.get('port'),
+                      username=config.get('username')) as pstr:
         try:
             query = pstr.query(id=paste_id)
         except ValueError:

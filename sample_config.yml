@@ -4,10 +4,10 @@ server:
   debug     : True
 
 database:
-  dbname    : "testingstuff"
-  dialect   : "postgresql"
+  dbname    : "pastedb"
+  dialect   : "postgresql
   driver    : null
   host      : null
-  password  : "a"
+  password  : null
   port      : null
-  username  : "fakeuser"
+  username  : null

@@ -46,13 +46,13 @@ def main():
                         help='username to use for the database connection')
     parser.add_argument('-p', '--password', default=config.get('password'),
                         help='password to use for the database connection')
-    parser.add_argument('-h', '--host', default=config.get('port'),
+    parser.add_argument('-s', '--server', default=config.get('port'),
                         help='host of the database')
     parser.add_argument('-P', '--port', default=config.get('username'),
                         help='port the database listens on')
     args = parser.parse_args()
     newdb = CreateDB(args.type, args.dbname, args.driver, args.username, args.password,
-                     args.host, args.port)
+                     args.server, args.port)
     print(newdb.create())
 
 if __name__ == "__main__":

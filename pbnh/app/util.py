@@ -2,7 +2,6 @@ import hashlib
 import io
 import json
 import magic
-import validators
 
 from pbnh.db import paste
 

@@ -1,10 +1,7 @@
 import io
 import re
-import pygments
 
 from flask import request, send_file, render_template, Response
-from pygments import highlight, util, formatters
-from pygments.lexers import get_lexer_for_mimetype, get_lexer_for_filename
 from sqlalchemy import exc
 from werkzeug.datastructures import FileStorage
 from datetime import datetime, timezone, timedelta

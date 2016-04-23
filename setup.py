@@ -6,5 +6,15 @@ setup(name='pbnh',
       author='Bryce Handerson, Ethan Madden',
       author_email='maddene@madden.ninja',
       url='https://github.com/bhanderson/pbnh',
-      packages=['pbnh'],
+      packages=setuptools.find_packages(exclude=['docs', 'tests*']),
+      install_requires=['Flask',
+                        'psycopg2',
+                        'python-magic',
+                        'pyYAML',
+                        'SQLAlchemy',
+                        'SQLAlchemy-utils'
+                        ],
+      tests_require=['nose',
+                     'pycurl',
+                     ]
      )

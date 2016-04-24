@@ -28,6 +28,7 @@ class CreateDB():
                 port=self.port,
                 dbname=self.dbname
                 )
+        print(connection)
         create_database(str(connection))
         engine = create_engine(str(connection))
         models.Base.metadata.create_all(engine)
@@ -42,13 +43,13 @@ def main():
                         help='name of the database to be created')
     parser.add_argument('-d', '--driver', default=config.get('driver'),
                         help='database driver for sqlalchemy to use')
-    parser.add_argument('-u', '--username', default=config.get('host'),
+    parser.add_argument('-u', '--username', default=config.get('username'),
                         help='username to use for the database connection')
     parser.add_argument('-p', '--password', default=config.get('password'),
                         help='password to use for the database connection')
-    parser.add_argument('-s', '--server', default=config.get('port'),
+    parser.add_argument('-s', '--server', default=config.get('host'),
                         help='host of the database')
-    parser.add_argument('-P', '--port', default=config.get('username'),
+    parser.add_argument('-P', '--port', default=config.get('port'),
                         help='port the database listens on')
     args = parser.parse_args()
     newdb = CreateDB(dialect=args.type, driver=args.driver, username=args.username,

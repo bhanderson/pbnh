@@ -11,9 +11,8 @@ from pbnh.db import paste
 from pbnh.app import app
 from pbnh.app import util
 
-config = conf.get_config()
-DATABASE = config.get('database').get('dialect')
-DBNAME = config.get('database').get('dbname')
+config = conf.get_config().get('database')
+
 @app.route("/", methods=["GET"])
 def hello():
     return 'welcome try to curl a paste:<br>cat filename | curl -F c=@- server'
@@ -57,7 +56,6 @@ def view_paste(paste_id):
         data = io.BytesIO(query.get('data'))
         return send_file(data, mimetype=mime)
     return fourohfour()
-
 
 @app.route("/<int:paste_id>.<string:filetype>")
 def view_paste_with_extension(paste_id, filetype):

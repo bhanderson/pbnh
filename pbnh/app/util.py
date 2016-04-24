@@ -3,14 +3,12 @@ import json
 import magic
 import mimetypes
 
+from pbnh import conf
 from pbnh.db import paste
 from pbnh import conf
 from datetime import datetime, timezone, timedelta
 
-# we really need to put these into a config file
-config = conf.get_config()
-DATABASE = config.get('database').get('dialect')
-DBNAME = config.get('database').get('dbname')
+config = conf.get_config().get('database')
 
 def fileData(files, addr=None, sunset=None, mimestr=None):
     try:
@@ -19,16 +17,22 @@ def fileData(files, addr=None, sunset=None, mimestr=None):
                 io.BufferedRandom):
             data = buf.read()
             mime = getMime(data=data, mimestr=mimestr)
-            with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+            with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
+                              driver=config.get('driver'), host=config.get('host'),
+                              password=config.get('password'), port=config.get('port'),
+                              username=config.get('username')) as pstr:
                 j = pstr.create(data, mime=mime, ip=addr,
-                        sunset=sunset)
+                                sunset=sunset)
                 return json.dumps(j)
     except IOError as e:
         return 'caught exception in filedata' + str(e)
     return 'File save error'
 
 def stringData(inputstr, addr=None, sunset=None, mime=None):
-    with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+    with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
+		      driver=config.get('driver'), host=config.get('host'),
+		      password=config.get('password'), port=config.get('port'),
+		      username=config.get('username')) as pstr:
         j = pstr.create(inputstr.encode('utf-8'), mime=mime, ip=addr, sunset=sunset)
         return json.dumps(j)
     return 'String save error'
@@ -43,7 +47,10 @@ def getSunsetFromStr(sunsetstr):
     return None
 
 def redirectData(redirect, addr=None, sunset=None):
-    with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+    with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
+		      driver=config.get('driver'), host=config.get('host'),
+		      password=config.get('password'), port=config.get('port'),
+		      username=config.get('username')) as pstr:
         j = pstr.create(redirect.encode('utf-8'), mime='redirect', ip=addr,
                 sunset=sunset)
         return json.dumps(j)
@@ -56,7 +63,10 @@ def getMime(data=None, mimestr=None):
     return 'text/plain'
 
 def getPaste(paste_id):
-    with paste.Paster(dialect=DATABASE, dbname=DBNAME) as pstr:
+    with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
+		      driver=config.get('driver'), host=config.get('host'),
+		      password=config.get('password'), port=config.get('port'),
+		      username=config.get('username')) as pstr:
         try:
             return pstr.query(id=paste_id)
         except ValueError:

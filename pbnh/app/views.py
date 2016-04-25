@@ -1,7 +1,7 @@
 import io
 import re
 
-from flask import request, send_file, render_template, Response
+from flask import request, send_file, render_template, Response, send_from_directory
 from sqlalchemy import exc
 from werkzeug.datastructures import FileStorage
 from datetime import datetime, timezone, timedelta
@@ -28,6 +28,9 @@ def about():
     f.close()
     return render_template('paste.html', paste=data, mime='markdown')
 
+@app.route("/static/<path:path>")
+def send_static(path):
+    return send_from_directory('static', path)
 
 @app.route("/", methods=["POST"])
 def post_paste():
@@ -82,14 +85,16 @@ def view_paste_with_extension(paste_id, filetype):
 
 @app.route("/<string:paste_id>/<string:filetype>")
 def view_paste_with_highlighting(paste_id, filetype):
+    if not filetype:
+        filetype = 'txt'
     query = util.getPaste(paste_id)
     if not query:
         return fourohfour()
     data = query.get('data')
-    mime = util.getMime(mimestr=filetype)
+    #mime = util.getMime(mimestr=filetype)
     try:
         return render_template('paste.html', paste=data.decode('utf-8'),
-                mime=mime)
+                mime=filetype)
     except UnicodeDecodeError:
         return fourohfour()
 

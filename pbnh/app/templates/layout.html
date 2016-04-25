@@ -1,13 +1,13 @@
 <html>
     <title>pbnh</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='codemirror.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='fullscreen.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='monokai.css')}}">
+    <link rel="stylesheet" href="/static/codemirror.css">
+    <link rel="stylesheet" href="/static/fullscreen.css">
+    <link rel="stylesheet" href="/static/monokai.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <script src="{{url_for('static', filename='codemirror.js')}}"></script>
-    <script src="{{url_for('static', filename='fullscreen.js')}}"></script>
-
-    {% block langs %}{% endblock %}
+    <script src="/static/codemirror.js"></script>
+    <script src="/static/fullscreen.js"></script>
+    <script src="/static/meta.js"></script>
+    <script src="/static/loadmode.js"></script>
 
     <div title="Ctrl-N" id="newicon" style="
        z-index: 100;
@@ -43,6 +43,7 @@
     <textarea id="paste" name="content">{{paste}}</textarea>
 
     <script>
+        CodeMirror.modeURL = "/static/langs/%N.js";
         var editor = CodeMirror.fromTextArea(paste, {
             lineNumbers: true,
             theme: 'monokai',
@@ -60,6 +61,17 @@
         helpicon.addEventListener("click", function(){
                 window.location.href = '/about.md';
         });
+        var info = CodeMirror.findModeByMIME('{{mime}}');
+        if (!info) {
+            info = CodeMirror.findModeByExtension('{{mime}}');
+        }
+        if (info) {
+            editor.setOption('mode', info.mime);
+            CodeMirror.autoLoadMode(editor, info.mode);
+            console.log(info.name);
+        } else {
+            console.warn('could not find the right highlighter');
+        }
     </script>
 
     {% block body %}{% endblock %}

@@ -9,7 +9,7 @@
 
     {% block langs %}{% endblock %}
 
-    <div id="newicon" style="
+    <div title="Ctrl-N" id="newicon" style="
        z-index: 100;
        position: absolute;
        right: 60;
@@ -19,7 +19,7 @@
        cursor: pointer;
        "><i class="fa fa-file-o fa-lg"></i>
     </span></div>
-    <div id="saveicon" style="
+    <div title="Ctrl-S" id="saveicon" style="
        z-index: 100;
        position: absolute;
        right: 30;
@@ -50,6 +50,9 @@
             fullScreen: true,
             autofocus: true,
             mode: '{{mime}}',
+            extraKeys: {"Ctrl-S": function() { saveicon.click(); },
+                        "Ctrl-N": function() { newicon.click(); },
+                       }
         });
         newicon.addEventListener("click", function(){
                 window.location.href = '/';

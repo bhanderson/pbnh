@@ -43,7 +43,10 @@ def post_paste():
         inputstr = request.form.get('c')
     # we got string data
     if inputstr and isinstance(inputstr, str):
-        return util.stringData(inputstr, addr=addr, sunset=sunset, mime=mimestr)
+        try:
+            return util.stringData(inputstr, addr=addr, sunset=sunset, mime=mimestr)
+        except (exc.OperationalError, exc.InternalError):
+            return fourohfour()
     files = request.files.get('content')
     if not files:
         files = request.files.get('c')

@@ -2,12 +2,23 @@
 <link rel="stylesheet" href="{{url_for('static', filename='codemirror.css')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='fullscreen.css')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='monokai.css')}}">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
 <script src="{{url_for('static', filename='codemirror.js')}}"></script>
 <script src="{{url_for('static', filename='fullscreen.js')}}"></script>
 <script src="{{url_for('static', filename='langs/css.js')}}"></script>
 <script src="{{url_for('static', filename='langs/go.js')}}"></script>
 <script src="{{url_for('static', filename='langs/javascript.js')}}"></script>
 <script src="{{url_for('static', filename='langs/python.js')}}"></script>
+<div id="newicon" style="
+   z-index: 100;
+   position: absolute;
+   right: 50;
+   color: #fff;
+   padding: 10;
+"><span style="
+   cursor: pointer;
+   "><i class="fa fa-file-o fa-lg"></i>
+</span></div>
 <textarea id="paste">
 {{paste}}
 </textarea>
@@ -15,11 +26,12 @@
 var editor = CodeMirror.fromTextArea(paste, {
       lineNumbers: true,
       theme: 'monokai',
-      indentUnit: 4,
       mode: '{{mime}}',
-      autofocus: true,
       fullScreen: true,
       readOnly: true,
+});
+newicon.addEventListener("click", function(){
+        window.location.href = '/';
 });
 </script>
 </html>

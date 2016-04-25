@@ -1,60 +1,50 @@
 <html>
 <link rel="stylesheet" href="{{url_for('static', filename='codemirror.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='monokai.css')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='fullscreen.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='monokai.css')}}">
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
 <script src="{{url_for('static', filename='codemirror.js')}}"></script>
 <script src="{{url_for('static', filename='fullscreen.js')}}"></script>
-<title>
-    pbnh
-</title>
-
-<form id='pasteform' action="/" method="post">
-<input type="hidden" name="content" value="NULL">
-</form>
-
-<textarea id="myTextarea">
-</textarea>
 <div id="saveicon" style="
    z-index: 100;
    position: absolute;
-   right: 0;
+   right: 20;
    color: #fff;
    padding: 10;
 "><span style="
    cursor: pointer;
-   "><i class="fa fa-save"></i></span></div>
+   "><i class="fa fa-save fa-lg"></i>
+</span></div>
 <div id="newicon" style="
    z-index: 100;
    position: absolute;
-   right: 30;
+   right: 50;
    color: #fff;
    padding: 10;
 "><span style="
    cursor: pointer;
-   "><i class="fa fa-file-o"></i></span></div>
+   "><i class="fa fa-file-o fa-lg"></i>
+</span></div>
+<textarea id="myTextarea" name="content">
+</textarea>
 <script>
 var editor = CodeMirror.fromTextArea(myTextarea, {
     lineNumbers: true,
     theme: 'monokai',
     indentUnit: 4,
-    autofocus: true,
     fullScreen: true,
-    onBlur: function () {
-        cm.save();
-    }
 });
 saveicon.addEventListener('click', function () {
     var xhttp = new XMLHttpRequest();
-    var pastetext = editor.getValue();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             window.location.href = JSON.parse(xhttp.responseText).id;
         }
     };
-    xhttp.open("POST", "/", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("content=" + pastetext);
+    var myForm = new FormData();
+    myForm.append("content", editor.getValue());
+    xhttp.open("POST", "/");
+    xhttp.send(myForm);
 });
 newicon.addEventListener("click", function(){
         window.location.href = '';

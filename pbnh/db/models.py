@@ -12,7 +12,6 @@ class Paste(Base):
     id           (PK) int
     hashid       string (hash of data)
     ip           string (will be of "ip address" type in pg)
-    mac          string (will be of "mac address" type in pg)
     mime         string
     timestamp    datetime
     sunset       datetime
@@ -23,7 +22,6 @@ class Paste(Base):
     id = Column(Integer, primary_key=True)
     hashid = Column(String, nullable=False)
     ip = Column(String)
-    mac = Column(String)
     timestamp = Column(DateTime, default=func.now())
     mime = Column(String, default='text/plain')
     sunset = Column(DateTime)

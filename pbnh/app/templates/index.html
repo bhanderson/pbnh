@@ -1,39 +1,6 @@
-<html>
-<link rel="stylesheet" href="{{url_for('static', filename='codemirror.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='fullscreen.css')}}">
-<link rel="stylesheet" href="{{url_for('static', filename='monokai.css')}}">
-<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<script src="{{url_for('static', filename='codemirror.js')}}"></script>
-<script src="{{url_for('static', filename='fullscreen.js')}}"></script>
-<div id="saveicon" style="
-   z-index: 100;
-   position: absolute;
-   right: 20;
-   color: #fff;
-   padding: 10;
-"><span style="
-   cursor: pointer;
-   "><i class="fa fa-save fa-lg"></i>
-</span></div>
-<div id="newicon" style="
-   z-index: 100;
-   position: absolute;
-   right: 50;
-   color: #fff;
-   padding: 10;
-"><span style="
-   cursor: pointer;
-   "><i class="fa fa-file-o fa-lg"></i>
-</span></div>
-<textarea id="myTextarea" name="content">
-</textarea>
+{% extends "layout.html" %}
+{% block body %}
 <script>
-var editor = CodeMirror.fromTextArea(myTextarea, {
-    lineNumbers: true,
-    theme: 'monokai',
-    indentUnit: 4,
-    fullScreen: true,
-});
 saveicon.addEventListener('click', function () {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -46,8 +13,5 @@ saveicon.addEventListener('click', function () {
     xhttp.open("POST", "/");
     xhttp.send(myForm);
 });
-newicon.addEventListener("click", function(){
-        window.location.href = '';
-});
 </script>
-</html>
+{% endblock %}

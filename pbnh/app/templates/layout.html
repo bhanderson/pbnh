@@ -1,0 +1,64 @@
+<html>
+    <title>pbnh</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='codemirror.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='fullscreen.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='monokai.css')}}">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="{{url_for('static', filename='codemirror.js')}}"></script>
+    <script src="{{url_for('static', filename='fullscreen.js')}}"></script>
+
+    {% block langs %}{% endblock %}
+
+    <div id="newicon" style="
+       z-index: 100;
+       position: absolute;
+       right: 60;
+       color: #fff;
+       padding: 10;
+    "><span style="
+       cursor: pointer;
+       "><i class="fa fa-file-o fa-lg"></i>
+    </span></div>
+    <div id="saveicon" style="
+       z-index: 100;
+       position: absolute;
+       right: 30;
+       color: #fff;
+       padding: 10;
+    "><span style="
+       cursor: pointer;
+       "><i class="fa fa-save fa-lg"></i>
+    </span></div>
+    <div id="helpicon" style="
+       z-index: 100;
+       position: absolute;
+       right: 10;
+       color: #fff;
+       padding: 10;
+    "><span style="
+       cursor: pointer;
+       "><i class="fa fa-question fa-lg" aria-hidden="true"></i>
+    </span></div>
+
+    <textarea id="paste" name="content">{{paste}}</textarea>
+
+    <script>
+        var editor = CodeMirror.fromTextArea(paste, {
+            lineNumbers: true,
+            theme: 'monokai',
+            indentUnit: 4,
+            fullScreen: true,
+            autofocus: true,
+            mode: '{{mime}}',
+        });
+        newicon.addEventListener("click", function(){
+                window.location.href = '/';
+        });
+        helpicon.addEventListener("click", function(){
+                window.location.href = '/about.md';
+        });
+    </script>
+
+    {% block body %}{% endblock %}
+
+</html>

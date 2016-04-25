@@ -21,6 +21,13 @@ def hello():
 def testing():
     return render_template('test.html')
 
+@app.route("/about.md", methods=["GET"])
+def about():
+    f = open('pbnh/app/static/about.md', 'r')
+    data = f.read()
+    f.close()
+    return render_template('paste.html', paste=data, mime='markdown')
+
 
 @app.route("/", methods=["POST"])
 def post_paste():
@@ -80,8 +87,11 @@ def view_paste_with_highlighting(paste_id, filetype):
         return fourohfour()
     data = query.get('data')
     mime = util.getMime(mimestr=filetype)
-    return render_template('paste.html', paste=data.decode('utf-8'),
-            mime=mime)
+    try:
+        return render_template('paste.html', paste=data.decode('utf-8'),
+                mime=mime)
+    except UnicodeDecodeError:
+        return fourohfour()
 
 @app.route("/error")
 def fourohfour():

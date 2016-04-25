@@ -8,16 +8,48 @@
 <script src="{{url_for('static', filename='langs/go.js')}}"></script>
 <script src="{{url_for('static', filename='langs/javascript.js')}}"></script>
 <script src="{{url_for('static', filename='langs/python.js')}}"></script>
+
+<form id='pasteform' action="/" method="post">
+<input type="hidden" name="content" value="NULL">
+</form>
+
 <textarea id="myTextarea">
 Hello world!
 </textarea>
+<div id="save" style="
+   z-index: 100;
+   position: absolute;
+   right: 0;
+   color: #fff;
+   padding: 10;
+"><span style="
+   cursor: pointer;
+">save</span></div>
+<div id="new" style="
+   z-index: 100;
+   position: absolute;
+   right: 50;
+   color: #fff;
+   padding: 10;
+"><span style="
+   cursor: pointer;
+">new</span></div>
 <script>
 var editor = CodeMirror.fromTextArea(myTextarea, {
-      lineNumbers: true,
-      theme: 'monokai',
-      indentUnit: 4,
-      autofocus: true,
-      fullScreen: true,
+    lineNumbers: true,
+    theme: 'monokai',
+    indentUnit: 4,
+    autofocus: true,
+    fullScreen: true,
+    onBlur: function () {
+        cm.save();
+    }
+});
+save.addEventListener('click', function () {
+    var pastetext = editor.getValue();
+    var form = document.forms.pasteform;
+    form.children.content.value = pastetext;
+    form.submit();
 });
 </script>
 </html>

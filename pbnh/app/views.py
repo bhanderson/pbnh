@@ -36,7 +36,7 @@ def post_paste():
     # we got file data
     if files and isinstance(files, FileStorage):
         return util.fileData(files, addr=addr, sunset=sunset, mimestr=mimestr)
-    return "Please specify paste data by using -F content=@file.txt or -F content='hello world!'\n"
+    return fourohfour()
 
 
 @app.route("/<string:paste_id>", methods=["GET"])

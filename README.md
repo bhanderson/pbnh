@@ -21,19 +21,22 @@ Note, psycopg2 is a C extension module. You can grab the dependencies by either 
 
 pycurl (needed for unit tests) seems to depend on libcurl4-gnutls-dev, librtmp-dev, libgnutls-dev
 
+To install the pbnh package:
+```
+$ git clone https://github.com/bhanderson/pbnh.git
+$ cd pbnh
+$ pip install .
+```
+
+## Configuration
+To configure pbnh, copy the sample config to ~/.config/pbnh/config.yml and edit it as desired
+
 To configure postgres (assuming debian/ubuntu, other distros should be similar):
 ```
 # apt-get install postgres
 # su - postgres
 $ createuser -s $USERNAME
-python3 db/createdb.py -t postgresql -n pastedb
-```
-
-To install the pbnh package:
-```
-$ git clone https://github.com/bhanderson/pbnh.git
-$ cd pbnh
-$ pip install -e .
+python3 db/createdb.py
 ```
 
 ## Usage
@@ -64,6 +67,10 @@ For example for the mimetype 'application/pdf' only specify pdf.
 curl -F content=@file.txt -F mime=plain servername.com
 ```
 ## Tests
+To install the dependencies required for running tests, simply run
+```
+pip install -r tests_require.txt
+```
 Tests can be ran by running nosetests in the pbnh directory or by specifying a specific test
 
 ## Dependency

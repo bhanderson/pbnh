@@ -30,9 +30,9 @@ def fileData(files, addr=None, sunset=None, mimestr=None):
 
 def stringData(inputstr, addr=None, sunset=None, mime=None):
     with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
-		      driver=config.get('driver'), host=config.get('host'),
-		      password=config.get('password'), port=config.get('port'),
-		      username=config.get('username')) as pstr:
+                      driver=config.get('driver'), host=config.get('host'),
+                      password=config.get('password'), port=config.get('port'),
+                      username=config.get('username')) as pstr:
         j = pstr.create(inputstr.encode('utf-8'), mime=mime, ip=addr, sunset=sunset)
         return json.dumps(j)
     return 'String save error'
@@ -48,9 +48,9 @@ def getSunsetFromStr(sunsetstr):
 
 def redirectData(redirect, addr=None, sunset=None):
     with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
-		      driver=config.get('driver'), host=config.get('host'),
-		      password=config.get('password'), port=config.get('port'),
-		      username=config.get('username')) as pstr:
+                      driver=config.get('driver'), host=config.get('host'),
+                      password=config.get('password'), port=config.get('port'),
+                      username=config.get('username')) as pstr:
         j = pstr.create(redirect.encode('utf-8'), mime='redirect', ip=addr,
                 sunset=sunset)
         return json.dumps(j)
@@ -64,15 +64,14 @@ def getMime(data=None, mimestr=None):
 
 def getPaste(paste_id):
     with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
-		      driver=config.get('driver'), host=config.get('host'),
-		      password=config.get('password'), port=config.get('port'),
-		      username=config.get('username')) as pstr:
+                      driver=config.get('driver'), host=config.get('host'),
+                      password=config.get('password'), port=config.get('port'),
+                      username=config.get('username')) as pstr:
         try:
             return pstr.query(id=paste_id)
         except ValueError:
-            return None
-        try:
-            return pstr.query(hashid=paste_id)
-        except ValueError:
-            return None
+            try:
+                return pstr.query(hashid=paste_id)
+            except ValueError:
+                return None
     return None

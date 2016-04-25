@@ -15,22 +15,24 @@ config = conf.get_config().get('database')
 
 @app.route("/", methods=["GET"])
 def hello():
-    return 'welcome try to curl a paste:<br>cat filename | curl -F c=@- server'
+    return render_template('index.html')
 
 
 @app.route("/", methods=["POST"])
 def post_paste():
     addr = request.remote_addr
-    inputstr = request.form.get('content')
-    files = request.files.get('content')
     sunsetstr = request.form.get('sunset')
     mimestr = request.form.get('mime')
-
     sunset = util.getSunsetFromStr(sunsetstr)
-
+    inputstr = request.form.get('content')
+    if not inputstr:
+        inputstr = request.form.get('c')
     # we got string data
     if inputstr and isinstance(inputstr, str):
         return util.stringData(inputstr, addr=addr, sunset=sunset, mime=mimestr)
+    files = request.files.get('content')
+    if not files:
+        files = request.files.get('c')
     # we got file data
     if files and isinstance(files, FileStorage):
         return util.fileData(files, addr=addr, sunset=sunset, mimestr=mimestr)
@@ -74,8 +76,9 @@ def view_paste_with_highlighting(paste_id, filetype):
         return fourohfour()
     data = query.get('data')
     mime = util.getMime(mimestr=filetype)
+    print(mime)
     return render_template('paste.html', paste=data.decode('utf-8'),
-            mime=filetype)
+            mime=mime)
 
 @app.route("/error")
 def fourohfour():

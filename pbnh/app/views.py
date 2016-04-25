@@ -1,7 +1,7 @@
 import io
 import re
 
-from flask import request, send_file, render_template, Response, send_from_directory
+from flask import request, send_file, render_template, Response, send_from_directory, redirect
 from sqlalchemy import exc
 from werkzeug.datastructures import FileStorage
 from datetime import datetime, timezone, timedelta
@@ -38,6 +38,9 @@ def post_paste():
     sunsetstr = request.form.get('sunset')
     mimestr = request.form.get('mime')
     sunset = util.getSunsetFromStr(sunsetstr)
+    redirectstr = request.form.get('r')
+    if redirectstr:
+        return util.stringData(redirectstr, addr=addr, sunset=sunset, mime='redirect')
     inputstr = request.form.get('content')
     if not inputstr:
         inputstr = request.form.get('c')
@@ -71,6 +74,8 @@ def view_paste(paste_id):
         return fourohfour()
     mime = query.get('mime')
     data = query.get('data')
+    if mime == 'redirect':
+        return redirect(data, code=302)
     if mime.split('/')[0] == 'text':
         return render_template('paste.html', paste=data.decode('utf-8'),
                 mime=mime)

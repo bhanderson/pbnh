@@ -39,7 +39,6 @@ python3 db/createdb.py
 ```
 
 ## Usage
-Currently the only way to use pbnh is with curl
 ```
 curl -F content=@file.txt servername.com
 ```
@@ -64,6 +63,11 @@ The mime type is how the file should be displayed. If text with highlighting, or
 For example for the mimetype 'application/pdf' only specify pdf.
 ```
 curl -F content=@file.txt -F mime=plain servername.com
+```
+### Redirect
+To redirect you must specify r as a string value and not as a file.
+```
+curl -F r='http://www.google.com' servername.com
 ```
 ## Tests
 To install the dependencies required for running tests, simply run

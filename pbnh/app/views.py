@@ -17,6 +17,11 @@ config = conf.get_config().get('database')
 def hello():
     return render_template('index.html')
 
+@app.route("/test", methods=["GET"])
+def testing():
+    print(request.url_rule)
+    return render_template('test.html')
+
 
 @app.route("/", methods=["POST"])
 def post_paste():
@@ -51,6 +56,7 @@ def view_paste(paste_id):
         return fourohfour()
     mime = query.get('mime')
     data = query.get('data')
+    print(data)
     if mime.split('/')[0] == 'text':
         return render_template('paste.html', paste=data.decode('utf-8'),
                 mime=mime)

@@ -23,6 +23,7 @@ def fileData(files, addr=None, sunset=None, mimestr=None):
                               username=config.get('username')) as pstr:
                 j = pstr.create(data, mime=mime, ip=addr,
                                 sunset=sunset)
+                print(data)
                 return json.dumps(j)
     except IOError as e:
         return 'caught exception in filedata' + str(e)

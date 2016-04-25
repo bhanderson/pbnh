@@ -2,12 +2,9 @@
 <link rel="stylesheet" href="{{url_for('static', filename='codemirror.css')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='monokai.css')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='fullscreen.css')}}">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
 <script src="{{url_for('static', filename='codemirror.js')}}"></script>
 <script src="{{url_for('static', filename='fullscreen.js')}}"></script>
-<script src="{{url_for('static', filename='langs/css.js')}}"></script>
-<script src="{{url_for('static', filename='langs/go.js')}}"></script>
-<script src="{{url_for('static', filename='langs/javascript.js')}}"></script>
-<script src="{{url_for('static', filename='langs/python.js')}}"></script>
 <title>
     pbnh
 </title>
@@ -17,9 +14,8 @@
 </form>
 
 <textarea id="myTextarea">
-Hello world!
 </textarea>
-<div id="save" style="
+<div id="saveicon" style="
    z-index: 100;
    position: absolute;
    right: 0;
@@ -27,16 +23,16 @@ Hello world!
    padding: 10;
 "><span style="
    cursor: pointer;
-">save</span></div>
-<div id="new" style="
+   "><i class="fa fa-save"></i></span></div>
+<div id="newicon" style="
    z-index: 100;
    position: absolute;
-   right: 50;
+   right: 30;
    color: #fff;
    padding: 10;
 "><span style="
    cursor: pointer;
-">new</span></div>
+   "><i class="fa fa-file-o"></i></span></div>
 <script>
 var editor = CodeMirror.fromTextArea(myTextarea, {
     lineNumbers: true,
@@ -48,7 +44,7 @@ var editor = CodeMirror.fromTextArea(myTextarea, {
         cm.save();
     }
 });
-save.addEventListener('click', function () {
+saveicon.addEventListener('click', function () {
     var xhttp = new XMLHttpRequest();
     var pastetext = editor.getValue();
     xhttp.onreadystatechange = function() {
@@ -59,6 +55,9 @@ save.addEventListener('click', function () {
     xhttp.open("POST", "/", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("content=" + pastetext);
+});
+newicon.addEventListener("click", function(){
+        window.location.href = '';
 });
 </script>
 </html>

@@ -19,7 +19,6 @@ def hello():
 
 @app.route("/test", methods=["GET"])
 def testing():
-    print(request.url_rule)
     return render_template('test.html')
 
 
@@ -56,7 +55,6 @@ def view_paste(paste_id):
         return fourohfour()
     mime = query.get('mime')
     data = query.get('data')
-    print(data)
     if mime.split('/')[0] == 'text':
         return render_template('paste.html', paste=data.decode('utf-8'),
                 mime=mime)
@@ -82,7 +80,6 @@ def view_paste_with_highlighting(paste_id, filetype):
         return fourohfour()
     data = query.get('data')
     mime = util.getMime(mimestr=filetype)
-    print(mime)
     return render_template('paste.html', paste=data.decode('utf-8'),
             mime=mime)
 

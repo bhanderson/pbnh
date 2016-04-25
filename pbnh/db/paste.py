@@ -32,7 +32,7 @@ class Paster():
         self.session.close()
         self.engine.dispose()
 
-    def create(self, data, ip=None, mac=None, mime=None, sunset=None,
+    def create(self, data, ip=None, mime=None, sunset=None,
                timestamp=None):
         sha1 = hashlib.sha1(data).hexdigest()
         collision = self.query(hashid=sha1)
@@ -43,7 +43,6 @@ class Paster():
             paste = models.Paste(
                     hashid = sha1,
                     ip = ip,
-                    mac = mac,
                     mime = mime,
                     sunset = sunset,
                     timestamp = timestamp,
@@ -82,7 +81,6 @@ class Paster():
                     'id': result.id,
                     'hashid': result.hashid,
                     'ip': result.ip,
-                    'mac': result.mac,
                     'mime': result.mime,
                     'timestamp': result.timestamp,
                     'sunset': result.sunset,

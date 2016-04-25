@@ -8,6 +8,9 @@
 <script src="{{url_for('static', filename='langs/go.js')}}"></script>
 <script src="{{url_for('static', filename='langs/javascript.js')}}"></script>
 <script src="{{url_for('static', filename='langs/python.js')}}"></script>
+<title>
+    pbnh
+</title>
 
 <form id='pasteform' action="/" method="post">
 <input type="hidden" name="content" value="NULL">
@@ -46,10 +49,16 @@ var editor = CodeMirror.fromTextArea(myTextarea, {
     }
 });
 save.addEventListener('click', function () {
+    var xhttp = new XMLHttpRequest();
     var pastetext = editor.getValue();
-    var form = document.forms.pasteform;
-    form.children.content.value = pastetext;
-    form.submit();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            window.location.href = JSON.parse(xhttp.responseText).id;
+        }
+    };
+    xhttp.open("POST", "/", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("content=" + pastetext);
 });
 </script>
 </html>

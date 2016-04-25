@@ -49,7 +49,10 @@ def post_paste():
         files = request.files.get('c')
     # we got file data
     if files and isinstance(files, FileStorage):
-        return util.fileData(files, addr=addr, sunset=sunset, mimestr=mimestr)
+        try:
+            return util.fileData(files, addr=addr, sunset=sunset, mimestr=mimestr)
+        except (exc.OperationalError, exc.InternalError):
+            return fourohfour()
     return fourohfour()
 
 

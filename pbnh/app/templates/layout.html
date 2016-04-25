@@ -1,13 +1,13 @@
 <html>
     <title>pbnh</title>
-    <link rel="stylesheet" href="/static/codemirror.css">
-    <link rel="stylesheet" href="/static/fullscreen.css">
-    <link rel="stylesheet" href="/static/monokai.css">
+    <link rel="stylesheet" href="/static/codemirror/codemirror.css">
+    <link rel="stylesheet" href="/static/codemirror/fullscreen.css">
+    <link rel="stylesheet" href="/static/codemirror/monokai.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <script src="/static/codemirror.js"></script>
-    <script src="/static/fullscreen.js"></script>
-    <script src="/static/meta.js"></script>
-    <script src="/static/loadmode.js"></script>
+    <script src="/static/codemirror/codemirror.js"></script>
+    <script src="/static/codemirror/fullscreen.js"></script>
+    <script src="/static/codemirror/meta.js"></script>
+    <script src="/static/codemirror/loadmode.js"></script>
 
     <div title="Ctrl-N" id="newicon" style="
        z-index: 100;
@@ -43,7 +43,7 @@
     <textarea id="paste" name="content">{{paste}}</textarea>
 
     <script>
-        CodeMirror.modeURL = "/static/langs/%N.js";
+        CodeMirror.modeURL = "/static/codemirror/langs/%N.js";
         var editor = CodeMirror.fromTextArea(paste, {
             lineNumbers: true,
             theme: 'monokai',

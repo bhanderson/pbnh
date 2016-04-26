@@ -23,7 +23,7 @@ class Paster():
         connection = DBConnect(dialect=self.dialect, driver=self.driver, username=self.username,
                                password=self.password, host=self.host, port=self.port,
                                dbname=self.dbname).connect
-        self.engine = create_engine(connection)
+        self.engine = create_engine(connection, pool_size=1)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
         return self

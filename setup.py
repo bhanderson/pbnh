@@ -1,4 +1,5 @@
 from distutils.core import setup
+import setuptools
 
 setup(name='pbnh',
       version='0.2',

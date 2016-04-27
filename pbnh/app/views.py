@@ -92,9 +92,11 @@ def view_paste_with_extension(paste_id, filetype):
     query = util.getPaste(paste_id)
     if not query:
         return fourohfour()
-    data = query.get('data')
-    mime = util.getMime(mimestr=filetype)
+    if filetype == 'md':
+        data = query.get('data').decode('utf-8')
+        return render_template('markdown.html', paste=data)
     data = io.BytesIO(query.get('data'))
+    mime = util.getMime(mimestr=filetype)
     return Response(data, mimetype=mime)
 
 @app.route("/<string:paste_id>/<string:filetype>")
@@ -105,7 +107,6 @@ def view_paste_with_highlighting(paste_id, filetype):
     if not query:
         return fourohfour()
     data = query.get('data')
-    #mime = util.getMime(mimestr=filetype)
     try:
         return render_template('paste.html', paste=data.decode('utf-8'),
                 mime=filetype)

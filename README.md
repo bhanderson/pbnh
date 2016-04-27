@@ -3,6 +3,8 @@ pbnh is our implementation of a pastebin server using flask and postgres or sqli
 
 It is highly derived from [silverp1's](https://github.com/silverp1) and [buhman's](https://github.com/buhman) project [pb](https://github.com/ptpb/pb) and they deserve the recognition for this idea.
 
+pbnh requires python3
+
 ## Table of Contents
  * [pbnh](#pbnh)
  * [Table of contents](#table-of-contents)

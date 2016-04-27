@@ -1,0 +1,13 @@
+<html>
+    <head>
+        <title>pbnh</title>
+        <script src="/static/marked.min.js"></script>
+    </head>
+    <body>
+        <div id="content"></div>
+        <div id="paste" style="display: none;">{{paste}}</div>
+        <script>
+document.getElementById('content').innerHTML = marked(paste.innerHTML);
+        </script>
+    </body>
+</html>

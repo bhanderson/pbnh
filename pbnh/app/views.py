@@ -110,5 +110,6 @@ def view_paste_with_highlighting(paste_id, filetype):
         return fourohfour()
 
 @app.route("/error")
+@app.errorhandler(404)
 def fourohfour():
-    return render_template('404.html')
+    return render_template('404.html'), 404

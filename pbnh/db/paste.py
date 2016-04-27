@@ -26,7 +26,7 @@ class Paster():
         if self.dialect == 'postgresql':
             self.engine = create_engine(connection, pool_size=1)
         else:
-            self.engine = create_engine(connection, pool_size=1)
+            self.engine = create_engine(connection)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
         return self

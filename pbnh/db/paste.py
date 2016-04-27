@@ -37,7 +37,6 @@ class Paster():
         sha1 = hashlib.sha1(data).hexdigest()
         collision = self.query(hashid=sha1)
         if collision:
-            print(collision)
             pasteid = collision.get('id')
         else:
             paste = models.Paste(

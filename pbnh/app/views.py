@@ -35,10 +35,9 @@ def send_static(path):
 @app.route("/", methods=["POST"])
 def post_paste():
     if request.headers.getlist("X-Forwarded-For"):
-        ip = request.headers.getlist("X-Forwarded-For")[0]
+        addr = request.headers.getlist("X-Forwarded-For")[0]
     else:
-       ip = request.remote_addr
-    addr = request.remote_addr
+       addr = request.remote_addr
     sunsetstr = request.form.get('sunset')
     mimestr = request.form.get('mime')
     sunset = util.getSunsetFromStr(sunsetstr)

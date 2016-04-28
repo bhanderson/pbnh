@@ -12,6 +12,7 @@ class PbnhTestCase(unittest.TestCase):
         #pbnh.init_db()
 
     def tearDown(self):
+        pass
         #os.close(self.db_fd)
         #os.unlink(pbnh.app.config['DATABASE'])
 

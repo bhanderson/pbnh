@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import unittest
 import json
+import os
 
 from pbnh import conf
 from pbnh import app
@@ -34,7 +35,7 @@ class TestPost(unittest.TestCase):
         self.app = app.app.test_client()
 
     def tearDown(self):
-        self.c.close()
+        os.unlink(DEFAULTS['database']['dbname'])
 
     def test_home(self):
         response = self.app.get('/')

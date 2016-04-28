@@ -3,7 +3,7 @@ import re
 
 from datetime import datetime, timezone, timedelta
 from docutils.core import publish_parts
-from flask import request, send_file, render_template, Response, send_from_directory, redirect
+from flask import abort, request, send_file, render_template, Response, send_from_directory, redirect
 from sqlalchemy import exc
 from werkzeug.datastructures import FileStorage
 
@@ -42,27 +42,29 @@ def post_paste():
     sunset = util.getSunsetFromStr(sunsetstr)
     redirectstr = request.form.get('r')
     if redirectstr:
-        return util.stringData(redirectstr, addr=addr, sunset=sunset, mime='redirect')
+        return util.stringData(redirectstr, addr=addr, sunset=sunset,
+                               mime='redirect'), 201
     inputstr = request.form.get('content')
     if not inputstr:
         inputstr = request.form.get('c')
     # we got string data
     if inputstr and isinstance(inputstr, str):
         try:
-            return util.stringData(inputstr, addr=addr, sunset=sunset, mime=mimestr)
+            return util.stringData(inputstr, addr=addr, sunset=sunset,
+                                   mime=mimestr), 201
         except (exc.OperationalError, exc.InternalError):
-            return fourohfour()
+            abort(500)
     files = request.files.get('content')
     if not files:
         files = request.files.get('c')
     # we got file data
     if files and isinstance(files, FileStorage):
         try:
-            return util.fileData(files, addr=addr, sunset=sunset, mimestr=mimestr)
+            return util.fileData(files, addr=addr, sunset=sunset,
+                                 mimestr=mimestr), 201
         except (exc.OperationalError, exc.InternalError):
-            return fourohfour()
-    return fourohfour()
-
+            abort(500)
+    abort(400)
 
 @app.route("/<string:paste_id>", methods=["GET"])
 def view_paste(paste_id):
@@ -73,24 +75,23 @@ def view_paste(paste_id):
     """
     query = util.getPaste(paste_id)
     if not query:
-        return fourohfour()
+        abort(404)
     mime = query.get('mime')
     data = query.get('data')
     if mime == 'redirect':
         return redirect(data, code=302)
-    if mime.split('/')[0] == 'text':
+    if mime.startswith('text/'):
         return render_template('paste.html', paste=data.decode('utf-8'),
                 mime=mime)
     else:
         data = io.BytesIO(query.get('data'))
         return send_file(data, mimetype=mime)
-    return fourohfour()
 
 @app.route("/<int:paste_id>.<string:filetype>")
 def view_paste_with_extension(paste_id, filetype):
     query = util.getPaste(paste_id)
     if not query:
-        return fourohfour()
+        abort(404)
     if filetype == 'md':
         data = query.get('data').decode('utf-8')
         return render_template('markdown.html', paste=data)
@@ -107,13 +108,13 @@ def view_paste_with_highlighting(paste_id, filetype):
         filetype = 'txt'
     query = util.getPaste(paste_id)
     if not query:
-        return fourohfour()
+        abort(404)
     data = query.get('data')
     try:
         return render_template('paste.html', paste=data.decode('utf-8'),
                 mime=filetype)
     except UnicodeDecodeError:
-        return fourohfour()
+        return abort(500)
 
 @app.route("/error")
 @app.errorhandler(404)

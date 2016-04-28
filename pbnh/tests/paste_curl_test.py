@@ -3,22 +3,29 @@ import pycurl
 import unittest
 import json
 import hashlib
+import tempfile
+import os
 
 from pbnh import conf
+from pbnh import app
 
 config = conf.get_config().get('server')
 host = config.get('bind_ip')
 port = config.get('bind_port')
 URL = 'http://{}:{}/'.format(host, port)
 
+
 class TestPost(unittest.TestCase):
     def setUp(self):
         self.c = pycurl.Curl()
         self.c.setopt(pycurl.URL, URL)
+        self.db_fd, app.app.config['DATABASE'] = tempfile.mkstemp()
         pass
 
     def tearDown(self):
         self.c.close()
+        os.close(self.db_fd)
+        os.unlink(app.app.config['DATABASE'])
         pass
 
     def test_hash_string(self):

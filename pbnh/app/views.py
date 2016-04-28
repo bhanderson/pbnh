@@ -16,10 +16,6 @@ from pbnh import conf
 def hello():
     return render_template('index.html')
 
-@app.route("/test", methods=["GET"])
-def testing():
-    return render_template('test.html')
-
 @app.route("/about.md", methods=["GET"])
 def about():
     f = open('pbnh/app/static/about.md', 'r')

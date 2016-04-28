@@ -1,8 +1,8 @@
 pbnh
 ========
 [![MIT License](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Issue Stats](http://issuestats.com/github/bhanderson/pbnh/badge/issue?style=flat)](http://issuestats.com/github/bhanderson/pbnh)
 [![Build Status](https://img.shields.io/travis/bhanderson/pbnh.svg)](https://travis-ci.org/bhanderson/pbnh)
+[![Coverage Status](https://coveralls.io/repos/github/bhanderson/pbnh/badge.svg?branch=master)](https://coveralls.io/github/bhanderson/pbnh?branch=master)
 
 pbnh is our implementation of a pastebin server using flask and postgres or sqlite
 
@@ -28,8 +28,6 @@ pbnh requires Python3
 
 ## Installation
 Note, psycopg2 is a C extension module for postgres. You can grab the dependencies by either installing python-psycopg2 from your package manager, or grab libpq-dev as well as python3-dev and gcc if you don't already have them.
-
-pycurl (needed for unit tests) seems to depend on libcurl4-gnutls-dev, librtmp-dev, libgnutls-dev
 
 To install the pbnh package:
 ```
@@ -92,6 +90,3 @@ To install the dependencies required for running tests, simply run
 pip install -r tests_require.txt
 ```
 Tests can be ran by running nosetests in the pbnh directory or by specifying a specific test
-
-## Dependency
-#TODO

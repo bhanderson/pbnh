@@ -4,8 +4,12 @@ python:
     - "3.4"
 
 install:
-    - "pip install ."
-    - "pip install -r requirements.txt"
-    - "pip install -r tests_require.txt"
+    - pip install .
+    - pip install -r requirements.txt
+    - pip install -r tests_require.txt
+    - pip install coveralls"
 
-script: nosetests
+script:
+    - nosetests
+    - coverage run --source=pbnh setup.py -q nosetests
+    - coveralls

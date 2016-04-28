@@ -3,15 +3,17 @@ from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database
 
 from pbnh import conf
+from pbnh import app
 from pbnh.db import models
 from pbnh.db.connect import DBConnect
+
 
 class CreateDB():
     def __init__(self, dialect=None, driver=None, username=None, password=None,
                  host=None, port=None, dbname=None):
         """Grab connection information to pass to DBConnect"""
         self.dialect = dialect or 'sqlite'
-        self.dbname = dbname or 'test'
+        self.dbname = dbname or app.app.config['DATABASE']
         self.driver = driver
         self.username = username
         self.password = password
@@ -33,6 +35,7 @@ class CreateDB():
         engine = create_engine(str(connection))
         models.Base.metadata.create_all(engine)
         return connection
+
 
 def main():
     config = conf.get_config().get('database')

@@ -20,13 +20,11 @@ class TestPost(unittest.TestCase):
         self.c = pycurl.Curl()
         self.c.setopt(pycurl.URL, URL)
         self.db_fd, app.app.config['DATABASE'] = tempfile.mkstemp()
-        pass
 
     def tearDown(self):
         self.c.close()
         os.close(self.db_fd)
         os.unlink(app.app.config['DATABASE'])
-        pass
 
     def test_hash_string(self):
         #c = pycurl.Curl()

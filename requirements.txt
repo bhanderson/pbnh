@@ -1,6 +1,7 @@
+docutils==0.12
 Flask==0.10.1
 psycopg2==2.6.1
 python-magic==0.4.11
 PyYAML==3.11
 SQLAlchemy==1.0.12
-SQLAlchemy-Utils==0.32.1
+SQLAlchemy-Utils==0.32.4

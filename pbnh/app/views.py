@@ -1,15 +1,16 @@
 import io
 import re
 
+from datetime import datetime, timezone, timedelta
+from docutils.core import publish_parts
 from flask import request, send_file, render_template, Response, send_from_directory, redirect
 from sqlalchemy import exc
 from werkzeug.datastructures import FileStorage
-from datetime import datetime, timezone, timedelta
 
-from pbnh import conf
-from pbnh.db import paste
 from pbnh.app import app
 from pbnh.app import util
+from pbnh.db import paste
+from pbnh import conf
 
 config = conf.get_config().get('database')
 
@@ -95,6 +96,9 @@ def view_paste_with_extension(paste_id, filetype):
     if filetype == 'md':
         data = query.get('data').decode('utf-8')
         return render_template('markdown.html', paste=data)
+    if filetype == 'rst':
+        data = query.get('data').decode('utf-8')
+        return Response(publish_parts(data, writer_name='html')['html_body'])
     data = io.BytesIO(query.get('data'))
     mime = util.getMime(mimestr=filetype)
     return Response(data, mimetype=mime)

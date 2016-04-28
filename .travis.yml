@@ -13,3 +13,6 @@ script:
     - nosetests
     - coverage run --source=pbnh setup.py -q nosetests
     - coveralls
+
+notifications:
+    email: false

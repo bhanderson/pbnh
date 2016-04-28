@@ -10,10 +10,10 @@ from pbnh.db.connect import DBConnect
 
 class CreateDB():
     def __init__(self, dialect=None, driver=None, username=None, password=None,
-                 host=None, port=None, dbname=app.app.config['DATABASE']):
+                 host=None, port=None, dbname=None)
         """Grab connection information to pass to DBConnect"""
         self.dialect = dialect or 'sqlite'
-        self.dbname = dbname or 'test'
+        self.dbname = dbname or app.app.config['DATABASE']
         self.driver = driver
         self.username = username
         self.password = password

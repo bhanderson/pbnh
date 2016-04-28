@@ -2,6 +2,7 @@
 import unittest
 import json
 import os
+import hashlib
 
 from pbnh import conf
 from pbnh import app
@@ -75,6 +76,15 @@ class TestPost(unittest.TestCase):
                 '738ddf35b3a85a7a6ba7b232bd3d5f1e4d284ad1')
         self.assertEqual(response.status_code, 201)
 
+    def test_follow_redirect(self):
+        url = DEFAULTS['server']['bind_ip'] + ":" +  str(DEFAULTS['server']['bind_port'])
+        hashid = hashlib.sha1(url.encode('utf-8')).hexdigest()
+        response = self.app.post('/', data={'r': url})
+        j = json.loads(response.data.decode('utf-8'))
+        self.failUnlessEqual(j.get('hashid'), hashid)
+        response = self.app.get('/1')
+        self.assertEqual(response.status_code, 302)
+
     def test_paste_file_c(self):
         response = self.app.post('/', data={'c': (BytesIO(b"contents"),
             'test')})
@@ -83,7 +93,7 @@ class TestPost(unittest.TestCase):
         self.failUnlessEqual(j.get('hashid'),
                 '4a756ca07e9487f482465a99e8286abc86ba4dc7')
 
-    def test_paste_file_c(self):
+    def test_paste_file_content(self):
         response = self.app.post('/', data={'content': (BytesIO(b"contents"),
             'test')})
         self.assertEqual(response.status_code, 201)
@@ -99,5 +109,23 @@ class TestPost(unittest.TestCase):
     def test_paste_highlight(self):
         response = self.app.post('/', data={'content': 'abc'})
         response = self.app.get('/1/txt')
+        self.assertEqual(response.status_code, 200)
+
+    def test_paste_not_text(self):
+        response = self.app.post('/', data={'content': (BytesIO(b"contents"),
+            'test'), 'mime': 'pdf'})
+        self.assertEqual(response.status_code, 201)
+        j = json.loads(response.data.decode('utf-8'))
+        self.failUnlessEqual(j.get('hashid'),
+                '4a756ca07e9487f482465a99e8286abc86ba4dc7')
+        response = self.app.get('/1')
+        self.assertEqual(response.status_code, 200)
+
+    def test_paste_sunset(self):
+        response = self.app.post('/', data={'content': (BytesIO(b"contents"),
+            'test'), 'sunset': 'pdf'})
+        response = self.app.post('/', data={'content': (BytesIO(b"contents"),
+            'test'), 'sunset': '10'})
+        response = self.app.get('/1')
         self.assertEqual(response.status_code, 200)
 

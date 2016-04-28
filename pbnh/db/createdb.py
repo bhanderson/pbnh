@@ -13,7 +13,7 @@ class CreateDB():
                  host=None, port=None, dbname=None):
         """Grab connection information to pass to DBConnect"""
         self.dialect = dialect or 'sqlite'
-        self.dbname = dbname or app.app.config['DATABASE']
+        self.dbname = dbname or app.app.config['CONFIG'].get('database').get('dbname')
         self.driver = driver
         self.username = username
         self.password = password

@@ -11,7 +11,7 @@ from datetime import datetime, timezone, timedelta
 
 def getConfig():
     if app.config.get('CONFIG'):
-        return app.config.get('CONFIG')
+        return app.config.get('CONFIG').get('database')
     else:
         return conf.get_config().get('database')
 
@@ -72,7 +72,6 @@ def getMime(data=None, mimestr=None):
 
 def getPaste(paste_id):
     config = getConfig()
-    print(config)
     with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
                       driver=config.get('driver'), host=config.get('host'),
                       password=config.get('password'), port=config.get('port'),

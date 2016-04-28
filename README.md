@@ -1,4 +1,4 @@
-[pbnh][]
+pbnh
 ========
 [![MIT License](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Issue Stats](http://issuestats.com/github/bhanderson/pbnh/badge/issue?style=flat)](http://issuestats.com/github/bhanderson/pbnh)

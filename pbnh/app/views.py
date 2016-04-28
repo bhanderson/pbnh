@@ -12,8 +12,6 @@ from pbnh.app import util
 from pbnh.db import paste
 from pbnh import conf
 
-config = conf.get_config().get('database')
-
 @app.route("/", methods=["GET"])
 def hello():
     return render_template('index.html')

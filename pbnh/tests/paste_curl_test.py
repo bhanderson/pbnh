@@ -8,6 +8,7 @@ import os
 
 from pbnh import conf
 from pbnh import app
+from pbnh.db.createdb import CreateDB
 
 config = conf.get_config().get('server')
 host = config.get('bind_ip')
@@ -15,17 +16,46 @@ port = config.get('bind_port')
 URL = 'http://{}:{}/'.format(host, port)
 
 
+DEFAULTS = {
+    "server": {
+        "bind_ip": "127.0.0.1",
+        "bind_port": 8080,
+        "debug": True,
+    },
+    "database": {
+        "dbname": "pastedb",
+        "dialect": "sqlite",
+        "driver": None,
+        "host": None,
+        "password": None,
+        "port": None,
+        "username": None
+    }
+}
+
+
 class TestPost(unittest.TestCase):
     def setUp(self):
         self.c = pycurl.Curl()
         self.c.setopt(pycurl.URL, URL)
-        self.db_fd, app.app.config['DATABASE'] = tempfile.mkstemp()
+        self.newdb = CreateDB(dialect=DEFAULTS['database']['dialect'],
+                dbname=DEFAULTS['database']['dbname'])
+        self.newdb.create()
+        app.app.config['CONFIG'] = DEFAULTS
+        self.app = app.app.test_client()
 
     def tearDown(self):
         self.c.close()
-        os.close(self.db_fd)
-        os.unlink(app.app.config['DATABASE'])
 
+    def test_one(self):
+        response = self.app.get('/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_two(self):
+        response = self.app.get('/1')
+        self.assertEqual(response.status_code, 200)
+
+"""
     def test_hash_string(self):
         #c = pycurl.Curl()
         data = [('content', 'abc')]
@@ -82,3 +112,4 @@ class TestPost(unittest.TestCase):
             self.failUnless(testurl in ret.pop().decode('utf-8'))
         else:
             self.fail()
+"""

@@ -3,14 +3,20 @@ import json
 import magic
 import mimetypes
 
-from pbnh import conf
 from pbnh.db import paste
+from pbnh.app import app
 from pbnh import conf
 from datetime import datetime, timezone, timedelta
 
-config = conf.get_config().get('database')
+
+def getConfig():
+    if app.config.get('CONFIG'):
+        return app.config.get('CONFIG')
+    else:
+        return conf.get_config().get('database')
 
 def fileData(files, addr=None, sunset=None, mimestr=None):
+    config = getConfig()
     try:
         buf = files.stream
         if buf and isinstance(buf, io.BytesIO) or isinstance(buf,
@@ -29,6 +35,7 @@ def fileData(files, addr=None, sunset=None, mimestr=None):
     return 'File save error'
 
 def stringData(inputstr, addr=None, sunset=None, mime=None):
+    config = getConfig()
     with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
                       driver=config.get('driver'), host=config.get('host'),
                       password=config.get('password'), port=config.get('port'),
@@ -47,6 +54,7 @@ def getSunsetFromStr(sunsetstr):
     return None
 
 def redirectData(redirect, addr=None, sunset=None):
+    config = getConfig()
     with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
                       driver=config.get('driver'), host=config.get('host'),
                       password=config.get('password'), port=config.get('port'),
@@ -63,6 +71,8 @@ def getMime(data=None, mimestr=None):
     return 'text/plain'
 
 def getPaste(paste_id):
+    config = getConfig()
+    print(config)
     with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
                       driver=config.get('driver'), host=config.get('host'),
                       password=config.get('password'), port=config.get('port'),

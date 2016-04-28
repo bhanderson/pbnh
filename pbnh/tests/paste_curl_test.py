@@ -56,4 +56,4 @@ class TestPost(unittest.TestCase):
                 'a9993e364706816aba3e25717850c26c9cd0d89d')
         self.assertEqual(response.status_code, 201)
         response = self.app.get('/1')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 200)

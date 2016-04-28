@@ -54,6 +54,6 @@ class TestPost(unittest.TestCase):
         j = json.loads(response.data.decode('utf-8'))
         self.failUnlessEqual(j.get('hashid'),
                 'a9993e364706816aba3e25717850c26c9cd0d89d')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         response = self.app.get('/1')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)

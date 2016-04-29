@@ -12,10 +12,10 @@ The icons are from [Font Awesome](https://fortawesome.github.io/Font-Awesome/)
  * [pbnh](#pbnh)
  * [Table of contents](#table-of-contents)
  * [Usage](#usage)
-    * [Post](#post)
-        * [Content](#content)
-        * [Sunset](#sunset)
-        * [Mime](#mime)
+    * [Content](#content)
+    * [Sunset](#sunset)
+    * [Mime](#mime)
+ * [Render](#render)
 
 ## Usage
 You can create pastes with the webui or though the cli using curl. Currently the only way to upload anything other than text or a redirect is through the cli.
@@ -28,6 +28,7 @@ Or you can cat a file
 ```
 cat file.txt | curl -F c=@- servername.com
 ```
+[![asciicast](https://asciinema.org/a/8q5x4a0wrhtm7e2feok4b9i67.png)](https://asciinema.org/a/8q5x4a0wrhtm7e2feok4b9i67)
 We also support strings
 ```
 curl -F content="hello world!" servername.com
@@ -54,3 +55,9 @@ For example for the mimetype 'application/pdf' only specify pdf.
 ```
 curl -F content=@file.txt -F mime=plain servername.com
 ```
+## Rendering
+You can render files as the browser would want to see them by specifying .<extension> in the url
+Currently things we render with javascript are
+* Markdown (.md)
+* RST (.rst)
+* asciinema (.asciinema)

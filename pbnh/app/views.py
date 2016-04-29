@@ -94,6 +94,8 @@ def view_paste_with_extension(paste_id, filetype):
     if filetype == 'rst':
         data = query.get('data').decode('utf-8')
         return Response(publish_parts(data, writer_name='html')['html_body'])
+    if filetype == 'asciinema':
+        return render_template('asciinema.html', pasteid=paste_id)
     data = io.BytesIO(query.get('data'))
     mime = util.getMime(mimestr=filetype)
     return Response(data, mimetype=mime)

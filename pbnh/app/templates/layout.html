@@ -10,35 +10,47 @@
     <script src="/static/codemirror/loadmode.js"></script>
 
     <div title="Ctrl-N" id="newicon" style="
-       z-index: 100;
-       position: absolute;
-       right: 60;
        color: #fff;
-       padding: 10;
-    "><span style="
        cursor: pointer;
-       "><i class="fa fa-file-o fa-lg"></i>
-    </span></div>
-    <div title="Ctrl-S" id="saveicon" style="
+       padding-top: 10;
+       position: absolute;
+       right: 90;
        z-index: 100;
+       "><i class="fa fa-file-o fa-lg"></i></div>
+    <div id="redirecticon" style="
+       color: #fff;
+       cursor: pointer;
+       padding-top: 10;
+       position: absolute;
+       right: 58;
+       z-index: 100;
+       "><i class="fa fa-external-link fa-lg"></i></div>
+    <div title="Ctrl-S" id="saveicon" style="
+       color: #fff;
+       cursor: pointer;
+       padding-top: 10;
        position: absolute;
        right: 30;
-       color: #fff;
-       padding: 10;
-    "><span style="
-       cursor: pointer;
-       "><i class="fa fa-save fa-lg"></i>
-    </span></div>
-    <div id="helpicon" style="
        z-index: 100;
+       "><i class="fa fa-save fa-lg"></i></div>
+    <div id="helpicon" style="
+       color: #fff;
+       cursor: pointer;
+       padding-top: 10;
        position: absolute;
        right: 10;
-       color: #fff;
-       padding: 10;
-    "><span style="
-       cursor: pointer;
-       "><i class="fa fa-question fa-lg" aria-hidden="true"></i>
-    </span></div>
+       z-index: 100;
+    "><i class="fa fa-question fa-lg"></i></div>
+
+<div id="lightbox" style="
+    visibility: hidden;
+    position: absolute;
+    z-index: 100;
+    ">
+    <form action="/" method="post">
+    <input type="text" name='redirect'><br>
+    <input type="submit" value="Submit a url">
+</div>
 
     <textarea id="paste" name="content">{{paste}}</textarea>
 
@@ -72,6 +84,12 @@
         } else {
             console.warn('could not find the right highlighter');
         }
+    redirecticon.addEventListener('click', function () {
+        var lightbox = document.getElementById("lightbox");
+        lightbox.style.visibility = 'visible';
+        lightbox.style.top = window.innerHeight/2 - 50 + 'px';
+        lightbox.style.left = window.innerWidth/2 - 100 + 'px';
+    });
     </script>
     <body bgcolor="#292923">
     {% block body %}{% endblock %}

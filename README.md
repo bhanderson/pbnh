@@ -35,6 +35,7 @@ $ git clone https://github.com/bhanderson/pbnh.git
 $ cd pbnh
 $ pip install .
 ```
+[![asciicast](https://asciinema.org/a/75sd1vwb395kp997phsowfcvs.png)](https://asciinema.org/a/75sd1vwb395kp997phsowfcvs)
 
 ## Configuration
 To configure pbnh, copy the sample config to ~/.config/pbnh/config.yml and edit it as desired. You can also use the default config in conf.py.
@@ -58,6 +59,7 @@ Or you can cat a file
 ```
 cat file.txt | curl -F c=@- servername.com
 ```
+[![asciicast](https://asciinema.org/a/8q5x4a0wrhtm7e2feok4b9i67.png)](https://asciinema.org/a/8q5x4a0wrhtm7e2feok4b9i67)
 We also support strings
 ```
 curl -F content="hello world!" servername.com

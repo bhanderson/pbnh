@@ -12,7 +12,7 @@ The syntax highlighting is done using [codemirrors](https://github.com/codemirro
 
 The icons are from [Font Awesome](https://fortawesome.github.io/Font-Awesome/)
 
-pbnh requires Python3
+pbnh requires at least Python 3.3
 
 ## Table of Contents
  * [pbnh](#pbnh)

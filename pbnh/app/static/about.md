@@ -1,9 +1,5 @@
 pbnh
 ========
-[![MIT License](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Issue Stats](http://issuestats.com/github/bhanderson/pbnh/badge/issue?style=flat)](http://issuestats.com/github/bhanderson/pbnh)
-[![Build Status](https://img.shields.io/travis/bhanderson/pbnh.svg)](https://travis-ci.org/bhanderson/pbnh)
-
 pbnh is our implementation of a pastebin server using flask and postgres or sqlite
 
 It is highly derived from [silverp1's](https://github.com/silverp1) and [buhman's](https://github.com/buhman) project [pb](https://github.com/ptpb/pb) and they deserve the recognition for this idea.
@@ -12,40 +8,14 @@ The syntax highlighting is done using [codemirrors](https://github.com/codemirro
 
 The icons are from [Font Awesome](https://fortawesome.github.io/Font-Awesome/)
 
-pbnh requires Python3
-
 ## Table of Contents
  * [pbnh](#pbnh)
  * [Table of contents](#table-of-contents)
- * [Installation](#installation)
  * [Usage](#usage)
     * [Post](#post)
         * [Content](#content)
         * [Sunset](#sunset)
         * [Mime](#mime)
- * [Tests](#tests)
- * [Dependency](#dependency)
-
-## Installation
-Note, psycopg2 is a C extension module for postgres. You can grab the dependencies by either installing python-psycopg2 from your package manager, or grab libpq-dev as well as python3-dev and gcc if you don't already have them.
-
-To install the pbnh package:
-```
-$ git clone https://github.com/bhanderson/pbnh.git
-$ cd pbnh
-$ pip install .
-```
-
-## Configuration
-To configure pbnh, copy the sample config to ~/.config/pbnh/config.yml and edit it as desired. You can also use the default config in conf.py.
-
-To configure postgres (assuming debian/ubuntu, other distros should be similar):
-```
-# apt-get install postgres
-# su - postgres
-$ createuser -s $USERNAME
-python3 db/createdb.py
-```
 
 ## Usage
 You can create pastes with the webui or though the cli using curl. Currently the only way to upload anything other than text or a redirect is through the cli.
@@ -84,9 +54,3 @@ For example for the mimetype 'application/pdf' only specify pdf.
 ```
 curl -F content=@file.txt -F mime=plain servername.com
 ```
-## Tests
-To install the dependencies required for running tests, simply run
-```
-pip install -r tests_require.txt
-```
-Tests can be ran by running nosetests in the pbnh directory or by specifying a specific test

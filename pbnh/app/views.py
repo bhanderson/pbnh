@@ -21,7 +21,7 @@ def about():
     f = open('pbnh/app/static/about.md', 'r')
     data = f.read()
     f.close()
-    return render_template('paste.html', paste=data, mime='markdown')
+    return render_template('markdown.html', paste=data)
 
 @app.route("/static/<path:path>")
 def send_static(path):

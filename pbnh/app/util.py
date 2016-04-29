@@ -1,5 +1,4 @@
 import io
-import json
 import magic
 import mimetypes
 
@@ -29,7 +28,7 @@ def fileData(files, addr=None, sunset=None, mimestr=None):
                               username=config.get('username')) as pstr:
                 j = pstr.create(data, mime=mime, ip=addr,
                                 sunset=sunset)
-                return json.dumps(j)
+                return j
     except IOError as e:
         return 'caught exception in filedata' + str(e)
     return 'File save error'
@@ -41,7 +40,7 @@ def stringData(inputstr, addr=None, sunset=None, mime=None):
                       password=config.get('password'), port=config.get('port'),
                       username=config.get('username')) as pstr:
         j = pstr.create(inputstr.encode('utf-8'), mime=mime, ip=addr, sunset=sunset)
-        return json.dumps(j)
+        return j
     return 'String save error'
 
 def getSunsetFromStr(sunsetstr):

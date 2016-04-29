@@ -1,5 +1,6 @@
 import io
 import re
+import json
 
 from datetime import datetime, timezone, timedelta
 from docutils.core import publish_parts
@@ -38,22 +39,28 @@ def post_paste():
     sunset = util.getSunsetFromStr(sunsetstr)
     redirectstr = request.form.get('r') or request.form.get('redirect')
     if redirectstr:
-        return util.stringData(redirectstr, addr=addr, sunset=sunset,
-                               mime='redirect'), 201
+        j = util.stringData(redirectstr, addr=addr, sunset=sunset, mime='redirect')
+        if j:
+            j['link'] = request.url + str(j.get('id'))
+        return json.dumps(j), 201
     inputstr = request.form.get('content') or request.form.get('c')
     # we got string data
     if inputstr and isinstance(inputstr, str):
         try:
-            return util.stringData(inputstr, addr=addr, sunset=sunset,
-                                   mime=mimestr), 201
+            j = util.stringData(inputstr, addr=addr, sunset=sunset, mime=mimestr)
+            if j:
+                j['link'] = request.url + str(j.get('id'))
+            return json.dumps(j), 201
         except (exc.OperationalError, exc.InternalError):
             abort(500)
     files = request.files.get('content') or request.files.get('c')
     # we got file data
     if files and isinstance(files, FileStorage):
         try:
-            return util.fileData(files, addr=addr, sunset=sunset,
-                                 mimestr=mimestr), 201
+            j = util.fileData(files, addr=addr, sunset=sunset, mimestr=mimestr)
+            if j:
+                j['link'] = request.url + str(j.get('id'))
+            return json.dumps(j), 201
         except (exc.OperationalError, exc.InternalError):
             abort(500)
     abort(400)

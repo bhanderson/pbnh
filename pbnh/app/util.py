@@ -53,16 +53,6 @@ def getSunsetFromStr(sunsetstr):
             return None
     return None
 
-def redirectData(redirect, addr=None, sunset=None):
-    config = getConfig()
-    with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
-                      driver=config.get('driver'), host=config.get('host'),
-                      password=config.get('password'), port=config.get('port'),
-                      username=config.get('username')) as pstr:
-        j = pstr.create(redirect.encode('utf-8'), mime='redirect', ip=addr,
-                sunset=sunset)
-        return json.dumps(j)
-
 def getMime(data=None, mimestr=None):
     if mimestr:
         return mimetypes.guess_type('file.{0}'.format(mimestr))[0]

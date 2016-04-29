@@ -36,13 +36,11 @@ def post_paste():
     sunsetstr = request.form.get('sunset')
     mimestr = request.form.get('mime')
     sunset = util.getSunsetFromStr(sunsetstr)
-    redirectstr = request.form.get('r')
+    redirectstr = request.form.get('r') or request.form.get('redirect')
     if redirectstr:
         return util.stringData(redirectstr, addr=addr, sunset=sunset,
                                mime='redirect'), 201
-    inputstr = request.form.get('content')
-    if not inputstr:
-        inputstr = request.form.get('c')
+    inputstr = request.form.get('content') or request.form.get('c')
     # we got string data
     if inputstr and isinstance(inputstr, str):
         try:
@@ -50,9 +48,7 @@ def post_paste():
                                    mime=mimestr), 201
         except (exc.OperationalError, exc.InternalError):
             abort(500)
-    files = request.files.get('content')
-    if not files:
-        files = request.files.get('c')
+    files = request.files.get('content') or request.files.get('c')
     # we got file data
     if files and isinstance(files, FileStorage):
         try:
@@ -94,6 +90,8 @@ def view_paste_with_extension(paste_id, filetype):
     if filetype == 'rst':
         data = query.get('data').decode('utf-8')
         return Response(publish_parts(data, writer_name='html')['html_body'])
+    if filetype == 'asciinema':
+        return render_template('asciinema.html', pasteid=paste_id)
     data = io.BytesIO(query.get('data'))
     mime = util.getMime(mimestr=filetype)
     return Response(data, mimetype=mime)

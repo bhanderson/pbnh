@@ -129,3 +129,23 @@ class TestPost(unittest.TestCase):
         response = self.app.get('/1')
         self.assertEqual(response.status_code, 200)
 
+    def test_get_markdown(self):
+        response = self.app.post('/', data={'content': 'abc'})
+        response = self.app.get('/1.md')
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_rst(self):
+        response = self.app.post('/', data={'content': 'abc'})
+        response = self.app.get('/1.rst')
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_asciinema(self):
+        response = self.app.post('/', data={'content': 'abc'})
+        response = self.app.get('/1.asciinema')
+        self.assertEqual(response.status_code, 200)
+
+    def test_ip_forwarding(self):
+        response = self.app.post('/',
+        environ_base={'X-Forwarded-For': '127.0.0.1'},
+        data={'content': 'abc'})
+        self.assertEqual(response.status_code, 201)

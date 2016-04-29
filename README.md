@@ -71,6 +71,8 @@ curl -F r="https://www.google.com" servername.com
 There are three different inputs allowed in a curl command they are content, sunset, and mime. Sunset and Mime are optional.
 ### content or c
 The content is exactly what it sounds like. The content of the file or the string data you want to paste and can be seen in the examples above.
+### redirect or r
+You can submit a url to be a 302 redirect by specifying the form as r or redirect
 ### sunset
 The sunset is the amount of time you want this paste to be available. If sunset is specified you may specify for it to last a maximum of 24 hours. If unspecified the sunset value is 0 and the paste will not be removed.
 
@@ -86,6 +88,12 @@ For example for the mimetype 'application/pdf' only specify pdf.
 ```
 curl -F content=@file.txt -F mime=plain servername.com
 ```
+## Rendering
+You can render files as the browser would want to see them by specifying .<extension> in the url
+Currently things we render with javascript are
+* Markdown (.md)
+* RST (.rst)
+* asciinema (.asciinema)
 ## Tests
 To install the dependencies required for running tests, simply run
 ```

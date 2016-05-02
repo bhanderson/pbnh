@@ -86,7 +86,7 @@ def view_paste(paste_id):
         data = io.BytesIO(query.get('data'))
         return send_file(data, mimetype=mime)
 
-@app.route("/<int:paste_id>.<string:filetype>")
+@app.route("/<string:paste_id>.<string:filetype>")
 def view_paste_with_extension(paste_id, filetype):
     query = util.getPaste(paste_id)
     if not query:

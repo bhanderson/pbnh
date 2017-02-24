@@ -8,4 +8,6 @@ RUN pip install /src
 
 EXPOSE 5001
 
-ENTRYPOINT ["python", "/src/pbnh/run.py"]
+WORKDIR /src
+
+ENTRYPOINT ["python", "pbnh/run.py"]

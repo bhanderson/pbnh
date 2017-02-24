@@ -16,6 +16,7 @@ pbnh_dialect = 'postgresql'
 
 if not psql_user or not psql_pass or not psql_host or not psql_port or not psql_name or not pbnh_port or not pbnh_host:
     print("Error with database variables")
+    print(os.environ)
     exit(-1)
 
 # create a db if there isnt one there

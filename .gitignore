@@ -69,3 +69,6 @@ venv/
 
 #db files
 *.db
+
+# DONT PUBLISH SECRETS
+secret.env.list

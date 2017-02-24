@@ -28,7 +28,7 @@ class CreateDB():
                 port=self.port,
                 dbname=self.dbname
                 )
-        print(connection)
+        #print(connection)
         create_database(str(connection))
         engine = create_engine(str(connection))
         models.Base.metadata.create_all(engine)

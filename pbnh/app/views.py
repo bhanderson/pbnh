@@ -11,7 +11,6 @@ from werkzeug.datastructures import FileStorage
 from pbnh.app import app
 from pbnh.app import util
 from pbnh.db import paste
-from pbnh import conf
 
 @app.route("/", methods=["GET"])
 def hello():

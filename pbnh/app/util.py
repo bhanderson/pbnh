@@ -4,15 +4,13 @@ import mimetypes
 
 from pbnh.db import paste
 from pbnh.app import app
-from pbnh import conf
 from datetime import datetime, timezone, timedelta
 
 
 def getConfig():
     if app.config.get('CONFIG'):
         return app.config.get('CONFIG').get('database')
-    else:
-        return conf.get_config().get('database')
+    return None
 
 def fileData(files, addr=None, sunset=None, mimestr=None):
     config = getConfig()

@@ -4,7 +4,6 @@ import json
 import os
 import hashlib
 
-from pbnh import conf
 from pbnh import app
 from pbnh.db.createdb import CreateDB
 from io import BytesIO

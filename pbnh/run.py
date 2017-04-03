@@ -1,4 +1,13 @@
 from pbnh.app import app
-import conf
-conf = conf.get_config().get('server')
-app.run(conf.get('bind_ip'), port=conf.get('bind_port'), debug=conf.get('debug'))
+import yaml
+
+config = {}
+with open('secrets.yml') as f:
+    config = yaml.load(f)
+
+app.config['CONFIG'] = config
+if config:
+    app.run(config.get('server').get('bind_ip'),
+    port=config.get('server').get('bind_port'))
+else:
+    exit(1)

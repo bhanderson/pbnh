@@ -55,7 +55,7 @@ def getMime(data=None, mimestr=None):
     if mimestr:
         return mimetypes.guess_type('file.{0}'.format(mimestr))[0]
     elif data:
-        return magic.from_buffer(data, mime=True).decode('utf-8')
+        return magic.from_buffer(data, mime=True)#.decode('utf-8')
     return 'text/plain'
 
 def getPaste(paste_id):

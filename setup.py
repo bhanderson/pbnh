@@ -20,7 +20,7 @@ setup(name='pbnh',
                         'SQLAlchemy',
                         'SQLAlchemy-utils'
                        ],
-      tests_requires=['nose',
+      tests_require=['nose',
                      'pycurl',
                     ]
      )

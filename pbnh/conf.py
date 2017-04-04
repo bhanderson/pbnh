@@ -1,4 +1,5 @@
 import yaml
+import copy
 
 DEFAULTS = {
         "server": {
@@ -12,14 +13,14 @@ DEFAULTS = {
             "driver": None,
             "host": None,
             "password": None,
-            "port", None,
-            "username", None
+            "port": None,
+            "username": None
             }
         }
 
 def get_config():
     try:
-        with open('secrets.yml'), as config:
+        with open('secrets.yml') as config:
             return yaml.load(config)
-    except FileNotFound:
+    except IOError:
         return copy.copy(DEFAULTS)

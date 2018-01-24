@@ -41,6 +41,8 @@ def post_paste():
     if redirectstr:
         j = util.stringData(redirectstr, addr=addr, sunset=sunset, mime='redirect')
         if j:
+            if isinstance(j, str):
+                return j
             j['link'] = request.url + str(j.get('id'))
         return json.dumps(j), 201
     inputstr = request.form.get('content') or request.form.get('c')
@@ -59,6 +61,8 @@ def post_paste():
         try:
             j = util.fileData(files, addr=addr, sunset=sunset, mimestr=mimestr)
             if j:
+                if isinstance(j, str):
+                    return j
                 j['link'] = request.url + str(j.get('id'))
             return json.dumps(j), 201
         except (exc.OperationalError, exc.InternalError):

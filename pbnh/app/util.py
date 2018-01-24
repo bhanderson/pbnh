@@ -1,6 +1,7 @@
 import io
 import magic
 import mimetypes
+import tempfile
 
 from pbnh.db import paste
 from pbnh.app import app
@@ -19,7 +20,7 @@ def fileData(files, addr=None, sunset=None, mimestr=None):
     try:
         buf = files.stream
         if buf and isinstance(buf, io.BytesIO) or isinstance(buf,
-                io.BufferedRandom):
+                io.BufferedRandom) or isinstance(buf, tempfile.SpooledTemporaryFile):
             data = buf.read()
             mime = getMime(data=data, mimestr=mimestr)
             with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
@@ -56,7 +57,7 @@ def getMime(data=None, mimestr=None):
     if mimestr:
         return mimetypes.guess_type('file.{0}'.format(mimestr))[0]
     elif data:
-        return magic.from_buffer(data, mime=True).decode('utf-8')
+        return magic.from_buffer(data, mime=True)
     return 'text/plain'
 
 def getPaste(paste_id):

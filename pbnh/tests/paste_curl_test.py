@@ -123,9 +123,9 @@ class TestPost(unittest.TestCase):
 
     def test_paste_sunset(self):
         response = self.app.post('/', data={'content': (BytesIO(b"contents"),
-            b'test'), 'sunset': 'pdf'})
+            'test'), 'sunset': 'pdf'})
         response = self.app.post('/', data={'content': (BytesIO(b"contents"),
-            b'test'), 'sunset': '10'})
+            'test'), 'sunset': '10'})
         response = self.app.get('/1')
         self.assertEqual(response.status_code, 200)
 

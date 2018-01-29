@@ -83,7 +83,7 @@ def view_paste(paste_id):
     data = query.get('data')
     if mime == 'redirect':
         return redirect(data, code=302)
-    if mime.startswith('text/'):
+    if mime.startswith(b'text/'):
         return render_template('paste.html', paste=data.decode('utf-8'),
                 mime=mime)
     else:

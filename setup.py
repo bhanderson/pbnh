@@ -9,8 +9,9 @@ setup(name='pbnh',
       url='https://github.com/bhanderson/pbnh',
       packages=setuptools.find_packages(exclude=['docs', 'tests*']),
       include_package_data=True,
-      package_data={'pbnh.app': ['static/*.*', 'static/codemirror/*.*',  'static/codemirror/langs/*', 'templates/*'],
-                    },
+      package_data={'pbnh.app': ['static/*.*', 'static/codemirror/*.*',
+                                 'static/codemirror/langs/*', 'templates/*'],
+                   },
       install_requires=['docutils',
                         'Flask',
                         'psycopg2',
@@ -18,8 +19,8 @@ setup(name='pbnh',
                         'pyYAML',
                         'SQLAlchemy',
                         'SQLAlchemy-utils'
-                        ],
+                       ],
       tests_require=['nose',
                      'pycurl',
-                     ]
+                    ]
      )

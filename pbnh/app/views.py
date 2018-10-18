@@ -28,9 +28,13 @@ except OSError:
         with open('/run/secrets/secrets.yml') as f:
             CONFIG = yaml.load(f)
     except OSError:
-        # As a final fallback, try checking the local dir
-        with open('secrets.yml') as f:
-            CONFIG = yaml.load(f)
+        try:
+            # As a final fallback, try checking the local dir
+            with open('secrets.yml') as f:
+                CONFIG = yaml.load(f)
+        except OSError:
+            # should probalt log instead of print. Whatever
+            print('no configuration files found')
 
 app.config['CONFIG'] = CONFIG
 

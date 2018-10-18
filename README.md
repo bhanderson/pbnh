@@ -44,11 +44,19 @@ To configure pbnh, copy the sample config to ~/.config/pbnh/config.yml and edit 
 
 To configure postgres (assuming debian/ubuntu, other distros should be similar):
 ```
-# apt-get install postgres
+# apt install postgres
 # su - postgres
 $ createuser -s $USERNAME
 python3 db/createdb.py
 ```
+
+## Configure using docker-compose
+- Install docker-compose by following the instructions here:
+  https://docs.docker.com/compose/install/
+- Copy `sample_config.yml` to `~/.config/pbnh.yml` and configure as desired
+- Build the container with `docker-compose build`
+- Launch the container with `docker-compose up`
+- The webui should be available at `localhost:5000`
 
 ## Usage
 You can create pastes with the webui or though the cli using curl. Currently the only way to upload anything other than text or a redirect is through the cli.

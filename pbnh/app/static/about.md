@@ -1,6 +1,6 @@
 pbnh
 ========
-pbnh is our implementation of a pastebin server using flask and postgres or sqlite
+[pbnh](https://github.com/bhanderson/pbnh) is our implementation of a pastebin server using flask and postgres or sqlite
 
 It is highly derived from [silverp1's](https://github.com/silverp1) and [buhman's](https://github.com/buhman) project [pb](https://github.com/ptpb/pb) and they deserve the recognition for this idea.
 

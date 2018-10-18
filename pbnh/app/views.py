@@ -21,11 +21,16 @@ try:
     with open(expanduser('~/.config/.pbnh.yml')) as f:
         CONFIG = yaml.load(f)
 except OSError:
-    # This is basically the prod config file, this is the path that a
-    # docker container will pull its config from if secrets are
-    # configured right.
-    with open('/run/secrets/secrets.yml') as f:
-        CONFIG = yaml.load(f)
+    try:
+        # This is basically the prod config file, this is the path that a
+        # docker container will pull its config from if secrets are
+        # configured right.
+        with open('/run/secrets/secrets.yml') as f:
+            CONFIG = yaml.load(f)
+    except OSError:
+        # As a final fallback, try checking the local dir
+        with open('secrets.yml') as f:
+            CONFIG = yaml.load(f)
 
 app.config['CONFIG'] = CONFIG
 

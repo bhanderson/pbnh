@@ -6,12 +6,14 @@ from datetime import datetime, timezone, timedelta
 from docutils.core import publish_parts
 from flask import abort, redirect, render_template, Response, request
 from flask import send_file, send_from_directory
-from os.path import expanduser
+from os.path import realpath, dirname, join, expanduser
 from sqlalchemy import exc
 from werkzeug.datastructures import FileStorage
 
 from pbnh.app import app
 from pbnh.app import util
+
+SITE_ROOT = realpath(dirname(__file__))
 
 
 CONFIG = {}
@@ -46,9 +48,8 @@ def hello():
 
 @app.route("/about.md", methods=["GET"])
 def about():
-    f = open('pbnh/app/static/about.md', 'r')
-    data = f.read()
-    f.close()
+    with open(join(SITE_ROOT, 'static', 'about.md'), 'r') as aboutfile:
+        data = aboutfile.read()
     return render_template('markdown.html', paste=data)
 
 

@@ -5,7 +5,6 @@ import tempfile
 
 from pbnh.db import paste
 from pbnh.app import app
-from pbnh import conf
 from datetime import datetime, timezone, timedelta
 
 
@@ -64,7 +63,8 @@ def getPaste(paste_id):
     config = getConfig()
     with paste.Paster(dialect=config.get('dialect'), dbname=config.get('dbname'),
                       driver=config.get('driver'), host=config.get('host'),
-                      password=config.get('password'), port=config.get('port'),
+                      password=config.get('password'),
+                      port=str(config.get('port')),
                       username=config.get('username')) as pstr:
         try:
             return pstr.query(id=paste_id)

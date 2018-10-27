@@ -1,16 +1,15 @@
 language: python
 
 python:
-    - "3.3"
     - "3.4"
     - "3.5"
-    - "3.5-dev"
+    - "3.6"
     - "nightly"
 
 install:
     - pip install .
-    - pip install -r requirements.txt
-    - pip install -r tests_require.txt
+    # These should get pulled from setup.py at some point
+    - pip install nose pycurl
     - pip install coveralls
 
 script:

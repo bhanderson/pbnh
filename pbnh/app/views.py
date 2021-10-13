@@ -74,7 +74,7 @@ def post_paste():
         if j:
             if isinstance(j, str):
                 return j
-            j['link'] = request.url + str(j.get('id'))
+            j['link'] = request.url + str(j.get('hashid'))
         return json.dumps(j), 201
     inputstr = request.form.get('content') or request.form.get('c')
     # we got string data
@@ -83,7 +83,7 @@ def post_paste():
             j = util.stringData(inputstr, addr=addr, sunset=sunset,
                                 mime=mimestr)
             if j:
-                j['link'] = request.url + str(j.get('id'))
+                j['link'] = request.url + str(j.get('hashid'))
             return json.dumps(j), 201
         except (exc.OperationalError, exc.InternalError):
             abort(500)
@@ -95,7 +95,7 @@ def post_paste():
             if j:
                 if isinstance(j, str):
                     return j
-                j['link'] = request.url + str(j.get('id'))
+                j['link'] = request.url + str(j.get('hashid'))
             return json.dumps(j), 201
         except (exc.OperationalError, exc.InternalError):
             abort(500)

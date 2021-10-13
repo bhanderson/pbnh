@@ -69,8 +69,5 @@ def getPaste(paste_id):
         try:
             return pstr.query(hashid=paste_id)
         except ValueError:
-            try:
-                return pstr.query(id=paste_id)
-            except ValueError:
-                return None
+            return None
     return None

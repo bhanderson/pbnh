@@ -15,7 +15,7 @@ setup(
         'gunicorn',
         'psycopg2',
         'python-magic',
-        'pyYAML',
+        'pyYAML<6',
         'SQLAlchemy',
         'SQLAlchemy-utils'
         ],

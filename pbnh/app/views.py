@@ -115,7 +115,7 @@ def view_paste(paste_id):
     mime = query.get('mime')
     data = query.get('data')
     if mime == 'redirect':
-        return redirect(data, code=302)
+        return redirect(data.decode('utf-8'), code=302)
     if mime.startswith('text/'):
         return render_template('paste.html', paste=data.decode('utf-8'),
                                mime=mime)

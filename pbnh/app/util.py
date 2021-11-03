@@ -67,10 +67,10 @@ def getPaste(paste_id):
                       port=str(config.get('port')),
                       username=config.get('username')) as pstr:
         try:
-            return pstr.query(id=paste_id)
+            return pstr.query(hashid=paste_id)
         except ValueError:
             try:
-                return pstr.query(hashid=paste_id)
+                return pstr.query(id=paste_id)
             except ValueError:
                 return None
     return None

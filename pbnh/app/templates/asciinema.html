@@ -4,8 +4,12 @@
         <script src="/static/asciinema-player.js"></script>
     </head>
     <body bgcolor="#292923">
-    <div id="player-container"></div>
-<script>
-asciinema.player.js.CreatePlayer('player-container', '/{{pasteid}}.json');
-</script>
+        <div id="player-container"></div>
+        <script>
+            AsciinemaPlayer.create(
+                "/{{pasteid}}.json",
+                document.getElementById("player-container"),
+            );
+        </script>
+    </body>
 </html>

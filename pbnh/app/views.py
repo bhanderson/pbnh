@@ -136,7 +136,19 @@ def view_paste_with_extension(paste_id, filetype):
         data = query.get('data').decode('utf-8')
         return Response(publish_parts(data, writer_name='html')['html_body'])
     if filetype == 'asciinema':
-        return render_template('asciinema.html', pasteid=paste_id)
+        # Prepare query params such that
+        # {{params|tojson}} produces a valid JS object:
+        params = {}
+        for key, value in request.args.to_dict().items():
+            try:
+                params[key] = json.loads(value)
+            except json.JSONDecodeError:
+                params[key] = str(value)
+        return render_template(
+            'asciinema.html',
+            pasteid=paste_id,
+            params=params,
+        )
     data = io.BytesIO(query.get('data'))
     mime = util.getMime(mimestr=filetype)
     return Response(data, mimetype=mime)
